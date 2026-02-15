@@ -1,1 +1,0 @@
-APL Plotting library compilation
