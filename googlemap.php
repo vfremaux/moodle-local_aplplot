@@ -15,11 +15,12 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * GoogleMap iframe wrapper
- * 
- * @package local_aplplot
- * @author Valery Fremaux (valery.fremaux@gmail.com)
- * @license http://www.gnu.org/copyleft/gpl.html GNU GPL
+ * GoogleMap iframe wrapper.
+ *
+ * @package     local_aplplot
+ * @author      Valery Fremaux <valery.fremaux@gmail.com>
+ * @copyright   2015 Valery Fremaux (www.activeprolearn.com)
+ * @license     https://www.gnu.org/copyleft/gpl.html GNU Public License
  */
 require('../../config.php');
 
@@ -32,11 +33,13 @@ $lat = optional_param('lat', 0, PARAM_TEXT);
 $lng = optional_param('lng', 0, PARAM_TEXT);
 $id = required_param('mapid', PARAM_TEXT);
 $mapid = 'map_'.$id;
-$markers = optional_param_array('markers', [], PARAM_TEXT); // Array of markers
+$markers = optional_param_array('markers', [], PARAM_TEXT); // Array of markers.
 
 $params = ['lat' => $lat, 'lng' => $lng, 'options' => $options, 'mapid' => $id];
 $url = new moodle_url('/local/aplplot/googlemap.php', $params);
 $PAGE->set_context($systemcontext);
+
+require_login();
 
 $template = new StdClass;
 $template->lat = $lat;
@@ -79,7 +82,7 @@ if (!empty($markerimages)) {
             $shadowimagetpl->classname = str_replace('sh_', '', $imname);
             $shadowimagetpl->imfullpath = moodle_url::make_plugin_file(
                 $systemcontext->id,
-                'local_vflibs',
+                'local_aplplot',
                 'googlemarks',
                 0,
                 $imfile->get_filepath(),
@@ -107,4 +110,3 @@ if (!empty($markers)) {
 }
 
 echo $OUTPUT->render_from_template('local_aplplot/googlemapframe', $template);
-

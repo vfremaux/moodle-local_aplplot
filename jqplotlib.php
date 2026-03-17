@@ -15,29 +15,35 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * @package local_aplplot
- * @author      Valery Fremaux (valery.fremaux@gmail.com)
- * @copyright   2015 Valery Fremaux (www.activeprolearn.com), Florence Labord (labord.florence@gmail.com)
- * @license     https://www.gnu.org/copyleft/gpl.html GNU Public License
+ * JQPlot wrapper library
  *
+ * @package     local_aplplot
+ * @author      Valery Fremaux (valery.fremaux@gmail.com)
+ * @copyright   2015 Valery Fremaux (www.activeprolearn.com)
+ * @license     https://www.gnu.org/copyleft/gpl.html GNU Public License
  */
 namespace local_aplplot;
 
-defined('MOODLE_INTERNAL') || die();
+// phpcs:disable moodle.Commenting.ValidTags.Invalid
 
 use moodle_exception;
 use coding_exception;
 use stdClass;
 
+/**
+ * Main JQPlot library wrapper
+ * This wrapper is not intended to cover ALL possibilites of jqplot
+ * but is accumulative to all use case APL plugins encountered.
+ * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ */
 class jqplot {
 
     /**
-     *
-     *
+     * JS Requires
      */
     public static function require_jqplot_libs() {
-        global $CFG, $PAGE;
-
+        global $PAGE;
         static $jqplotloaded = false;
 
         if ($jqplotloaded) {
@@ -102,7 +108,8 @@ class jqplot {
         $str = "$varname = ";
 
         $points = [];
-        for ($i = 0; $i < count($data[0]); $i++) {
+        $num = count($data[0]);
+        for ($i = 0; $i < $num; $i++) {
             $points[] = "['{$data[0][$i]}','{$data[1][$i]}', '{$data[2][$i]}']";
         }
         $str .= '['.implode(',', $points).']';
@@ -111,10 +118,18 @@ class jqplot {
     }
 
     /**
-     * prints any JQplot graph type given a php descriptor and dataset
-     *
+     * prints any JQplot graph type given a php descriptor and dataset.
+     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
+     * @param string $htmlid
+     * @param object $graph
+     * @param array $data
+     * @param int $width
+     * @param int $height
+     * @param string $addstyle Additional css
+     * @param bool $return
+     * @param array $ticks additional defs for axis ticks
      */
-    public static function print_graph($htmlid, $graph, &$data, $width, $height, $addstyle = '', $return = false, $ticks = null) {
+    public static function print_graph($htmlid, $graph, $data, $width, $height, $addstyle = '', $return = false, $ticks = null) {
         global $plotid;
         static $instance = 0;
 
@@ -229,8 +244,14 @@ class jqplot {
                       markerOptions:{size:15, style:'circle'},
                       shadowDepth:2
                 },
-                axes:{ xaxis:{label:'{$options['xlabel']}', min:{$options['xmin']}, max:{$options['xmax']}, tickOptions:{formatString:'%d {$options['xunit']}'}},
-                       yaxis:{label:'{$options['ylabel']}', min:{$options['ymin']}, max:{$options['ymax']}, tickOptions:{formatString:'%d {$options['yunit']}'}}
+                axes:{ xaxis:{label:'{$options['xlabel']}',
+                              min:{$options['xmin']},
+                              max:{$options['xmax']},
+                              tickOptions:{formatString:'%d {$options['xunit']}'}},
+                       yaxis:{label:'{$options['ylabel']}',
+                              min:{$options['ymin']},
+                              max:{$options['ymax']},
+                              tickOptions:{formatString:'%d {$options['yunit']}'}}
                 },
                 cursor:{zoom:true, showTooltip:false}
             });
@@ -274,18 +295,19 @@ class jqplot {
 
     /**
      * prints a simple bargraph.
-     * @param arrayref &$data an associative array with one simple 'label' => value pairs.
-     * @param arrayref &$ticks an associative array with one simple 'label' => value pairs.
+     * @param arrayref $data an associative array with one simple 'label' => value pairs.
+     * @param arrayref $ticks an associative array with one simple 'label' => value pairs.
      * @param string $title a text title.
      * @param string $htmlid an html identifier seed. Will be appended with an automatic instance index.
      * @param array $options some rendering options to inject in jqplot template, to override defaults.
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
-    public static function print_simple_bargraph(&$data, &$ticks, $title, $htmlid, $options = array()) {
-        global $plotid;
-        static $instance = 0;
+    public static function print_simple_bargraph($data, $ticks, $title, $htmlid, $options = []) {
+        global $plotid, $OUTPUT;
 
-        $htmlid = $htmlid.'_'.$instance;
-        $instance++;
+        $htmlid = $htmlid.'_'.$plotid;
+        $plotid++;
 
         if (empty($data)) {
             return '';
@@ -323,59 +345,21 @@ class jqplot {
             $options['seriename'] = '';
         }
 
-        $str = '';
+        $template = new StdClass;
+        $template->htmlid = $htmlid;
+        $template->plotid = $plotid;
+        $template->options = $options;
 
-        $str .= '<center>';
-        $str .= '<div id="'.$htmlid.'" class="vflibs-jqhgraph" style="width:'.$options['width'].'px; height:'.$options['height'].'px;"></div>';
-        $str .= '</center>';
-        $str .= '<script type="text/javascript" language="javascript">';
-        $str .= '
-            $.jqplot.config.enablePlugins = true;
-        ';
+        $template->title = addslashes($title);
 
-        $title = addslashes($title);
-
-        $str .= self::simplebarline('graphdata', $data);
-        $str .= "\n";
+        $template->graphdata = self::simplebarline('graphdata', $data);
 
         if (empty($ticks)) {
             $ticks = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100];
         }
-        $str .= self::simplebarline('ticks'.$htmlid, $ticks);
+        $template->ticksdata = self::simplebarline('ticks'.$htmlid, $ticks);
 
-        $str .= "
-            plot{$plotid} = $.jqplot(
-                '$htmlid',
-                [graphdata],
-                {
-                    legend:{
-                        show:true,
-                        location:'e',
-                        placement:'outsideGrid'},
-                    title:'$title',
-                    seriesDefaults:{ renderer:$.jqplot.BarRenderer,
-                                   rendererOptions:{barDirection:'{$options['direction']}',
-                                                    barPadding: 6,
-                                                    barMargin:15},
-                                   shadowAngle:135
-                    },
-                    series:[
-                        {label:'{$options['seriename']}'}
-                    ],
-                    highlighter: {
-                        show: false,
-                    },
-                    axesDefaults:{useSeriesColor: false, syncTicks:true},
-                    axes:{ xaxis:{label:'{$options['xlabel']}', min:{$options['xmin']}, max:{$options['xmax']}, tickOptions:{formatString:'%d {$options['xunit']}'}},
-                           yaxis:{renderer:$.jqplot.CategoryAxisRenderer, ticks: ticks{$htmlid}}
-                }
-            });
-        ";
-
-        $str .= "</script>";
-        $plotid++;
-
-        return $str;
+        return $OUTPUT->render_from_template('local_aplplot/bargraph', $template);
     }
 
     /**
@@ -404,13 +388,14 @@ class jqplot {
         $title = addslashes($title);
 
         // Make curves from each x, y pair and print them to Javascript.
-        $xserie = $data[0]; // date stamps.
+        $xserie = $data[0]; // Date stamps.
         $varset = [];
-        for ($i = 1; $i < count($data) - 1; $i++) {
+        $num = count($data) - 1;
+        $xcount = count($xserie);
+        for ($i = 1; $i < $num; $i++) {
             // Process a single serie.
             $yserie = $data[$i];
             $curvedata = [];
-            $xcount = count($xserie);
             for ($j = 0; $j < $xcount; $j++) {
                 $curvedata[$j][0] = $xserie[$j];
                 $curvedata[$j][1] = $yserie[$j];
@@ -474,6 +459,12 @@ class jqplot {
 
     /**
      * Prints a donut from a simple serie of label => value data.
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @param $data
+     * @param $htmlid
+     * @param string $class
+     * @param array $attributes
      */
     public static function simple_donut($data, $htmlid, $class, $attributes = null) {
         global $plotid, $OUTPUT;

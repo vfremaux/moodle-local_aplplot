@@ -15,16 +15,20 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * @package local_aplplot
- * @author valery.fremaux@gmail.com
+ * Lang file for local_aplplot
+ *
+ * @package     local_aplplot
+ * @author      Valery Fremaux (valery.fremaux@gmail.com)
+ * @copyright   2026 Valery Fremaux (www.activeprolearn.com)
+ * @license     https://www.gnu.org/copyleft/gpl.html GNU Public License
  */
 
-$string['pluginname'] = 'Librairies de graphage pour les plugins APL';
-
-$string['configjqplotshadows'] = 'Ombres des graphes JQPlot';
-
+$string['configdonutrenderercolors_desc'] = 'Donner une liste de couleurs HTML séparée par des virgules.';
 $string['configgooglemapsapikey'] = 'Clef d\'API Google Maps';
 $string['configgooglemapsapikey_desc'] = 'Google Maps n\'est plus un service gratuit. Vous devez sourcrire un contrat de sevice de données applicatives pour utiliser les cartes Google.';
-$string['missinggooglekey'] = 'Vous n\'avez pas entré de clef d\'API Google. Voir la documentation https://developers.google.com/maps/documentation/javascript/get-api-key';
-$string['configdonutrenderercolors_desc'] = 'Donner une liste de couleurs HTML séparée par des virgules.';
+$string['configjqplotshadows'] = 'Ombres des graphes JQPlot';
 $string['configjqplotshadows_desc'] = 'Si activé, ajouter un ombrage sur les générateurs jqplot.';
+$string['missinggooglekey'] = 'Vous n\'avez pas entré de clef d\'API Google. Voir la documentation https://developers.google.com/maps/documentation/javascript/get-api-key';
+$string['pluginname'] = 'Librairies de graphage pour les plugins APL';
+
+

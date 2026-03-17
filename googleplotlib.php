@@ -15,27 +15,34 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * @package local_aplcore
+ * Wrapper to google plot libs. Will be obsoleted by use of OpenSDtreetMap
+ * framework.
+ *
+ * @package     local_aplplot
  * @author      Valery Fremaux (valery.fremaux@gmail.com)
- * @copyright   2015 Valery Fremaux (www.activeprolearn.com), Florence Labord (labord.florence@gmail.com)
+ * @copyright   2015 Valery Fremaux (www.activeprolearn.com)
  * @license     https://www.gnu.org/copyleft/gpl.html GNU Public License
  */
 namespace local_aplplot;
 
-defined('MOODLE_INTERNAL') || die();
-
 use stdClass;
 
+/**
+ * GoogleMaps wrapper class
+ */
 class googlemaps {
 
     /**
      * Implements a google maps API V3 wrapper for Moodle
+     * @param $sensor
      */
-
     public static function require_js($sensor = 'false') {
         echo "<script type=\"text/javascript\" src=\"http://maps.googleapis.com/maps/api/js?sensor=$sensor\"></script>\n";
     }
 
+    /**
+     * Initialization
+     */
     public static function initialize() {
         global $googlemaps;
 
@@ -64,12 +71,19 @@ class googlemaps {
      *             center: latlng,
      *             mapTypeId: google.maps.MapTypeId.ROADMAP
      *           };
+     * @param string $htmlid
+     * @param int $lat
+     * @param int $lng
+     * @param int $width in pixels
+     * @param int $height in pixels
+     * @param array $options
      */
-    public static function print_graph($htmlid, $lat, $lng, $width = 400, $height = 350, $options = array(), $data = null) {
+    public static function print_graph($htmlid, $lat, $lng, $width = 400, $height = 350,
+            $options = []) {
         global $googlemaps;
 
         if (!isset($googlemaps)) {
-            $googlemaps = array();
+            $googlemaps = [];
         }
 
         if (empty($lat)) {
@@ -101,7 +115,18 @@ class googlemaps {
         return $str;
     }
 
-    public static function embed_graph($htmlid, $lat, $lng, $width = 400, $height = 350, $options = array(), $data = null) {
+    /**
+     * Print embedded graph
+     *
+     * @param string $htmlid
+     * @param int $lat
+     * @param int $lng
+     * @param int $width in pixels
+     * @param int $height in pixels
+     * @param array $options
+     * @param object $data
+     */
+    public static function embed_graph($htmlid, $lat, $lng, $width = 400, $height = 350, $options = [], $data = null) {
         global $COURSE, $OUTPUT;
 
         if (empty($lat)) {
@@ -112,9 +137,12 @@ class googlemaps {
         }
 
         $optionsstr = json_encode($options);
-        $optionsstr = preg_replace('/\"(google\.maps\.[^\s]*)\"/', "$1", $optionsstr); // Remove quotes provided by php jsonisation.
-        $optionsstr = preg_replace('/\"([\d+.]+)\"/', "$1", $optionsstr); // Remove quotes around numbers provided by php jsonisation.
-        $optionsstr = str_replace('"latlng"', 'latlng', $optionsstr); // Remove quotes provided by php jsonisation.
+        // Remove quotes provided by php jsonisation.
+        $optionsstr = preg_replace('/\"(google\.maps\.[^\s]*)\"/', "$1", $optionsstr);
+        // Remove quotes around numbers provided by php jsonisation.
+        $optionsstr = preg_replace('/\"([\d+.]+)\"/', "$1", $optionsstr);
+        // Remove quotes provided by php jsonisation.
+        $optionsstr = str_replace('"latlng"', 'latlng', $optionsstr);
 
         $template = new StdClass;
         $template->htmlid = $htmlid;
@@ -165,7 +193,7 @@ class googlemaps {
         curl_setopt($ch, CURLOPT_POST, false);
         curl_setopt($ch, CURLOPT_USERAGENT, 'Moodle Dashboards');
         curl_setopt($ch, CURLOPT_POSTFIELDS, '');
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-Type: text/xml charset=UTF-8"));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, ["Content-Type: text/xml charset=UTF-8"]);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
 

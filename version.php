@@ -19,7 +19,7 @@
  *
  * @package     local_aplplot
  * @author      Valery Fremaux <valery.fremaux@gmail.com>
- * @copyright   2014 onwards Valery Fremaux (http://www.mylearningfactory.com)
+ * @copyright   2026 onwards Valery Fremaux (https://www.activeprolearn.com)
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 

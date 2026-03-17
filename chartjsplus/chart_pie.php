@@ -17,21 +17,24 @@
 /**
  * Chart pie.
  *
- * @package    core
- * @copyright  2016 Frédéric Massart - FMCorz.net
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package     local_aplplot
+ * @author      Valery Fremaux (valery.fremaux@gmail.com)
+ * @copyright   2026 Valery Fremaux (www.activeprolearn.com)
+ * @license     https://www.gnu.org/copyleft/gpl.html GNU Public License
  */
 
-namespace local_vflibs;
-require_once($CFG->dirroot.'/local/vflibs/chartjsplus/chart_base_trait.php');
+namespace local_aplplot;
+require_once($CFG->dirroot.'/local/aplplot/chartjsplus/chart_base_trait.php');
+
 defined('MOODLE_INTERNAL') || die();
 
 /**
  * Chart pie class.
  *
- * @package    core
- * @copyright  2016 Frédéric Massart - FMCorz.net
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package     local_aplplot
+ * @author      Valery Fremaux (valery.fremaux@gmail.com)
+ * @copyright   2026 Valery Fremaux (www.activeprolearn.com)
+ * @license     https://www.gnu.org/copyleft/gpl.html GNU Public License
  */
 class chart_pie extends \core\chart_pie {
 
