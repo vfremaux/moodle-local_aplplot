@@ -15,23 +15,32 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * an integration wrapper for timeline of SIMILE project
+ * an integration wrapper for timeline from SIMILE project
  *
- * @package local_vflibs
- * @author valery.fremaux@gmail.com
+ * @package     local_aplplot
+ * @author      Valery Fremaux valery.fremaux@gmail.com
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU Public License
+ * @copyright   2020 Valery Fremaux (https://www.activeprolearn.com)
  */
 namespace local_aplplot;
 
-defined('MOODLE_INTERNAL') || die();
+// phpcs:disable moodle.Commenting.ValidTags.Invalid
 
 use context_block;
 use stdClass;
 use moodle_url;
 
+/**
+ * Timeline wrapper class
+ */
 class timeline {
 
+    /**
+     * JS requires
+     * @param string $libroot physical root of libraries
+     */
     public static function require_js($libroot) {
-        global $CFG, $PAGE;
+        global $PAGE;
 
         static $timelineloaded = false;
 
@@ -44,6 +53,10 @@ class timeline {
         $timelineloaded = true;
     }
 
+    /**
+     * Initialize a timeline
+     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
+     */
     public static function initialize($return = false) {
         global $timelinegraphs;
 
@@ -71,80 +84,48 @@ class timeline {
         echo $str;
     }
 
-    public static function print_graph(&$theblock, $htmlid, $width, $height, &$data, $return = false) {
-        global $timelinegraphs, $CFG, $COURSE, $USER;
+    /**
+     * Print a timeline graph
+     * @param object $theblock the block calling block instance
+     * @param string $htmlid
+     * @param int $width
+     * @param int $height
+     * @param array $data
+     * @param bool $return
+     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
+     */
+    public static function print_graph($theblock, $htmlid, $width, $height, $data, $return = false) {
+        global $timelinegraphs, $USER, $OUTPUT;
+
+        if (!isset($theblock->config->upperbandunit)) {
+            $msg = "This library is used from an incompatible block. There should be some ";
+            $msg .= "timeline configuration in the block instance's config to play.";
+            throw new coding_exception($msg);
+        }
 
         if (!isset($timelinegraphs)) {
-            $timelinegraphs = array();
+            $timelinegraphs = [];
         }
 
         // Generate data on a tmp file.
         self::generate_xml($theblock, $htmlid, $data);
 
-        $str = "<div id=\"timeline_{$htmlid}\" style=\"height:{$height}px; width:{$width}pxborder: 1px solid #aaa\"></div>\n";
-
-        $genid = rand(1000, 100000);
-
-        $str .= "<script type=\"text/javascript\">
-            var tl;
-            function timeline_initialize_{$htmlid}() {
-
-               // create bands
-                  var eventSource = new Timeline.DefaultEventSource();
-               var bandInfos = [
-                 Timeline.createBandInfo({
-                     eventSource:    eventSource,
-                     width:          \"70%\",
-                     intervalUnit:   Timeline.DateTime.{$theblock->config->upperbandunit},
-                     intervalPixels: 100
-                 })
-        ";
-        if ($theblock->config->showlowerband) {
-            $str .= ",
-                 Timeline.createBandInfo({
-                     eventSource:    eventSource,
-                     width:          \"30%\",
-                     intervalUnit:   Timeline.DateTime.{$theblock->config->lowerbandunit},
-                     intervalPixels: 200
-                 })
-             ";
-        }
-
-        $str .= "
-               ];
-        ";
-
-        if ($theblock->config->showlowerband) {
-            $str .= "
-                    bandInfos[1].syncWith = 0;
-                       bandInfos[1].highlight = true;
-               ";
-        }
-
+        $template = new StdClass;
+        $template->htmlid = $htmlid;
+        $template->width = $width;
+        $template->height = $height;
+        $template->upperbandunit = $theblock->config->upperbandunit;
+        $template->showlowerband = $theblock->config->showlowerband;
+        $template->lowerbandunit = $theblock->config->lowerbandunit;
         $filename = $htmlid.'_'.$USER->id.'.xml';
-        $blockcontext = context_block::instance($thelbock->instance->id);
-        $xmlurl = moodle_url::make_pluginfile_url($blockcontext->id, 'block_'.$theblock->blockname, 'timelineevents', $theblock->instance->id, '/', $filename, true);
-        $xmlurl .= '&unique='.uniqid(); // Avoid caching.
-
-        $str .= "
-                tl = Timeline.create(document.getElementById(\"timeline_{$htmlid}\"), bandInfos);
-                Timeline.loadXML(\"$xmlurl\", function(xml, url) { eventSource.loadXML(xml, url); });
-             }
-
-             var resizeTimerID = null;
-             function onResize() {
-                 if (resizeTimerID == null) {
-                     resizeTimerID = window.setTimeout(function() {
-                         resizeTimerID = null;
-                         tl.layout();
-                     }, 500);
-                 }
-             }
-            </script>
-        ";
+        $blockcontext = context_block::instance($theblock->instance->id);
+        $template->xmlurl = moodle_url::make_pluginfile_url($blockcontext->id, 'block_'.$theblock->blockname,
+                'timelineevents', $theblock->instance->id, '/', $filename, true);
+        $template->xmlurl .= '&unique='.uniqid(); // Avoid caching.
 
         $timelinegraphs[] = $htmlid;
 
+        $str = $OUTPUT->render_from_template('local_aplplot/timeline', $template);
         if ($return) {
             return $str;
         }
@@ -156,9 +137,14 @@ class timeline {
      * date formats : Standard UTF timestamps. Ex: May 28 2006 09:00:00 GMT
      * Postgre to_char pattern : 'Mon DD YYYY HH24:MI:SS GMT'
      * Mysql formatting using date_format :  '%b %d %Y %H:%i:%s GMT'
+     * @param object $theblock
+     * @param string $htmlid
+     * @param array $data
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
-    public static function generate_xml(&$theblock, $htmlid, &$data) {
-        global $CFG, $COURSE, $USER;
+    public static function generate_xml($theblock, $htmlid, $data) {
+        global $USER;
 
         $fs = get_file_storage();
 
@@ -169,6 +155,10 @@ class timeline {
         $theblock->normalize($colorkeys, $colors);
         $colouring = array_combine($colorkeys, $colors);
         if (!function_exists('mytrim')) {
+            /**
+             * Embdded function.
+             * @param array &$data
+             */
             function mytrim(&$data) {
                 $data = trim($data);
             }
@@ -202,7 +192,8 @@ class timeline {
                     !empty($d->{$theblock->config->timelineeventlink})) {
                 $eventattrs[] = "link=\"".$d->{$theblock->config->timelineeventlink}."\"";
             }
-            if (!empty($theblock->config->timelinecolorfield) && !empty($d->{$theblock->config->timelinecolorfield})) {
+            if (!empty($theblock->config->timelinecolorfield) &&
+                    !empty($d->{$theblock->config->timelinecolorfield})) {
                 if (array_key_exists($d->{$theblock->config->timelinecolorfield}, $colouring)) {
                     $eventattrs[] = "color=\"".$colouring[$d->{$theblock->config->timelinecolorfield}]."\"";
                 }
@@ -228,6 +219,11 @@ class timeline {
         $fs->create_file_from_string($filerec, $tmp);
     }
 
+    /**
+     * Date converter
+     * @param int $date
+     * @param object $theblock calling block instance
+     */
     public static function date_convert($date, $theblock) {
 
         // This might be for further needs.

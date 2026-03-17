@@ -1,0 +1,64 @@
+
+
+<!-- local_aplplot/bargraph -->
+<center>
+<div id="{{htmlid}}"
+     class="aplplot-jqhgraph"
+     style="width:{{options.width}}px; height:{{options.height}}px;">
+</div>
+</center>
+
+<script type="text/javascript" language="javascript">
+    $.jqplot.config.enablePlugins = true;
+
+    {{{graphdata}}}
+
+    {{{ticksdata}}}
+
+    plot{{plotid}} = $.jqplot(
+        '{{htmlid}}',
+        [graphdata],
+        {
+            legend: {
+                show: true,
+                location: 'e',
+                placement: 'outsideGrid'},
+                title: '{{title}}'
+            },
+            seriesDefaults:{
+                renderer:$.jqplot.BarRenderer,
+                rendererOptions:{
+                    barDirection:'{{options.direction}}',
+                    barPadding: 6,
+                    barMargin:15
+                },
+                shadowAngle:135
+            },
+            series:[{
+                label:'{{options.seriename}}'
+            }],
+            highlighter: {
+                show: false,
+            },
+            axesDefaults:{
+                useSeriesColor: false,
+                syncTicks: true
+            },
+            axes:{
+                xaxis:{
+                    label:'{{options.xlabel}}',
+                    min:{{options.xmin}},
+                    max:{{options.xmax'}},
+                    tickOptions:{
+                        formatString:'%d {{options.xunit}}'
+                    }
+                },
+                yaxis:{
+                    renderer:$.jqplot.CategoryAxisRenderer,
+                    ticks: ticks{{htmlid}}
+                }
+            }
+        }
+    );
+</script>
+<!-- /local_aplplot/bargraph -->

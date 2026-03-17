@@ -15,93 +15,79 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * @package local_vflibs
- * @author valery.fremaux@gmail.com
- * @category local
+ * JQuery plugins declaration
+ *
+ * @package local_aplplot
+ * @author      Valery Fremaux (valery.fremaux@gmail.com)
+ * @copyright   2026 Valery Fremaux (www.activeprolearn.com)
+ * @license     https://www.gnu.org/copyleft/gpl.html GNU Public License
  */
 defined('MOODLE_INTERNAL') || die;
 
-$plugins = array(
-        'sparklines' => array('files' => array('sparklines/sparklines.min.js')),
-        'jqplotjquery' => array('files' => array('jqplot/jquery.min.js')),
-        'jqplot'      => array(
-            'files' => array(
-                'jqplot/jquery.jqplot.min.js',
-                'jqplot/excanvas.min.js',
-                'jqplot/plugins/jqplot.dateAxisRenderer.min.js',
-                'jqplot/plugins/jqplot.barRenderer.min.js',
-                'jqplot/plugins/jqplot.highlighter.min.js',
-                'jqplot/plugins/jqplot.canvasOverlay.min.js',
-                'jqplot/plugins/jqplot.cursor.min.js',
-                'jqplot/plugins/jqplot.categoryAxisRenderer.min.js',
-                'jqplot/plugins/jqplot.pointLabels.min.js',
-                'jqplot/plugins/jqplot.logAxisRenderer.min.js',
-                'jqplot/plugins/jqplot.canvasTextRenderer.min.js',
-                'jqplot/plugins/jqplot.canvasAxisTickRenderer.min.js',
-                'jqplot/plugins/jqplot.canvasAxisLabelRenderer.min.js',
-                'jqplot/plugins/jqplot.enhancedLegendRenderer.min.js',
-                'jqplot/plugins/jqplot.pieRenderer.min.js',
-                'jqplot/plugins/jqplot.donutRenderer.min.js'
-            )
-        ),
-        'jqwidgets-core' => array(
-            'files' => array(
-                'jqwidgets/jqwidgets/jqxcore.js',
-                'jqwidgets/jqwidgets/jqxdraw.js',
-                'jqwidgets/jqwidgets/styles/jqx.base.css'
-            )
-        ),
-        'jqwidgets-bargauge' => array(
-            'files' => array(
-                'jqwidgets/jqwidgets/jqxbargauge.js'
-            )
-        ),
-        'jqwidgets-progressbar' => array(
-            'files' => array(
-                'jqwidgets/jqwidgets/jqxprogressbar.js'
-            )
-        ),
-        'jqwidgets-core' => array(
-            'files' => array(
-                'jqwidgets/jqwidgets/jqxcore.js',
-                'jqwidgets/jqwidgets/jqxdraw.js',
-                'jqwidgets/jqwidgets/styles/jqx.base.css'
-            )
-        ),
-        'jqwidgets-bargauge' => array(
-            'files' => array(
-                'jqwidgets/jqwidgets/jqxbargauge.js'
-            )
-        ),
-        'jqwidgets-progressbar' => array(
-            'files' => array(
-                'jqwidgets/jqwidgets/jqxprogressbar.js'
-            )
-        ),
-        'jqwidgets-bulletchart' => array(
-            'files' => array(
-                'jqwidgets/jqwidgets/jqxcore.js',
-                'jqwidgets/jqwidgets/jqxdata.js',
-                'jqwidgets/jqwidgets/jqxtooltip.js',
-                'jqwidgets/jqwidgets/jqxbulletchart.js',
-                'jqwidgets/jqwidgets/styles/jqx.base.css'
-            )
-        ),
-        'jqwidgets-barchart' => array(
-            'files' => array(
-                'jqwidgets/jqwidgets/jqxcore.js',
-                'jqwidgets/jqwidgets/jqxdraw.js',
-                'jqwidgets/jqwidgets/jqxchart.core.js',
-                'jqwidgets/jqwidgets/jqxdata.js',
-                'jqwidgets/jqwidgets/styles/jqx.base.css'
-            )
-        ),
-        'jqwidgets-switchbutton' => array(
-            'files' => array(
-                'jqwidgets/jqwidgets/jqxcore.js',
-                'jqwidgets/jqwidgets/jqxswitchbutton.js',
-                'jqwidgets/jqwidgets/jqxcheckbox.js',
-                'jqwidgets/jqwidgets/styles/jqx.base.css'
-            )
-        )
-);
+$plugins = [
+    'sparklines' => ['files' => ['sparklines/sparklines.min.js']],
+    'jqplotjquery' => ['files' => ['jqplot/jquery.min.js']],
+    'jqplot' => [
+        'files' => [
+            'jqplot/jquery.jqplot.min.js',
+            'jqplot/excanvas.min.js',
+            'jqplot/plugins/jqplot.dateAxisRenderer.min.js',
+            'jqplot/plugins/jqplot.barRenderer.min.js',
+            'jqplot/plugins/jqplot.highlighter.min.js',
+            'jqplot/plugins/jqplot.canvasOverlay.min.js',
+            'jqplot/plugins/jqplot.cursor.min.js',
+            'jqplot/plugins/jqplot.categoryAxisRenderer.min.js',
+            'jqplot/plugins/jqplot.pointLabels.min.js',
+            'jqplot/plugins/jqplot.logAxisRenderer.min.js',
+            'jqplot/plugins/jqplot.canvasTextRenderer.min.js',
+            'jqplot/plugins/jqplot.canvasAxisTickRenderer.min.js',
+            'jqplot/plugins/jqplot.canvasAxisLabelRenderer.min.js',
+            'jqplot/plugins/jqplot.enhancedLegendRenderer.min.js',
+            'jqplot/plugins/jqplot.pieRenderer.min.js',
+            'jqplot/plugins/jqplot.donutRenderer.min.js',
+        ],
+    ],
+    'jqwidgets-core' => [
+        'files' => [
+            'jqwidgets/jqwidgets/jqxcore.js',
+            'jqwidgets/jqwidgets/jqxdraw.js',
+            'jqwidgets/jqwidgets/styles/jqx.base.css',
+        ],
+    ],
+    'jqwidgets-bargauge' => [
+        'files' => [
+            'jqwidgets/jqwidgets/jqxbargauge.js',
+        ],
+    ],
+    'jqwidgets-progressbar' => [
+        'files' => [
+            'jqwidgets/jqwidgets/jqxprogressbar.js',
+        ],
+    ],
+    'jqwidgets-bulletchart' => [
+        'files' => [
+            'jqwidgets/jqwidgets/jqxcore.js',
+            'jqwidgets/jqwidgets/jqxdata.js',
+            'jqwidgets/jqwidgets/jqxtooltip.js',
+            'jqwidgets/jqwidgets/jqxbulletchart.js',
+            'jqwidgets/jqwidgets/styles/jqx.base.css',
+        ],
+    ],
+    'jqwidgets-barchart' => [
+        'files' => [
+            'jqwidgets/jqwidgets/jqxcore.js',
+            'jqwidgets/jqwidgets/jqxdraw.js',
+            'jqwidgets/jqwidgets/jqxchart.core.js',
+            'jqwidgets/jqwidgets/jqxdata.js',
+            'jqwidgets/jqwidgets/styles/jqx.base.css',
+        ],
+    ],
+    'jqwidgets-switchbutton' => [
+        'files' => [
+            'jqwidgets/jqwidgets/jqxcore.js',
+            'jqwidgets/jqwidgets/jqxswitchbutton.js',
+            'jqwidgets/jqwidgets/jqxcheckbox.js',
+            'jqwidgets/jqwidgets/styles/jqx.base.css',
+        ],
+    ],
+];

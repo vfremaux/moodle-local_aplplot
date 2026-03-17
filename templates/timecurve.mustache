@@ -1,0 +1,59 @@
+
+
+<!-- local_aplcore/timecurve -->
+<center>
+<div id="timeBars{{htmlid}}"
+    class="aplplot-jqtimebars"
+    style="width:800px; height:350px;"></div>
+</center>
+
+<script type="text/javascript">
+
+    {{{curvedata}}}
+
+    $.jqplot.config.enablePlugins = true;
+
+    plot{$plotid} = $.jqplot(
+        'timeBars{{htmlid}}',
+        [{{{varsetlist}}}],
+        {
+            title: '{{title}}',
+            seriesDefaults:{
+                renderer:$.jqplot.BarRenderer,
+                rendererOptions:{
+                    barDirection:'vertical',
+                    barWidth: 10,
+                    barPadding: 6,
+                    barMargin:15
+                },
+                shadowAngle:135
+            },
+            cursor: {
+                show: false
+            },
+            axes: {
+                xaxis: {
+                    renderer: $.jqplot.DateAxisRenderer,
+                    tickRenderer: $.jqplot.CanvasAxisTickRenderer,
+                    tickOptions:{
+                        formatString:'%d/%m/%y',
+                        angle: -45,
+                        fontSize: '8pt'
+                    },
+                    tickInterval:'1 week'
+                },
+                yaxis: {
+                    autoscale:true,
+                    tickOptions:{
+                        formatString:'%d'
+                    },
+                    label:'{{options.ylabel}}'
+                }
+            },
+            series:[
+                {{{seriesdata}}}
+            ]
+        }
+    );
+</script>
+<!-- /local_aplcore/timecurve -->

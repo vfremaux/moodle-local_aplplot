@@ -15,9 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * Global settings
+ *
  * @package     local_aplplot
  * @author      Valery Fremaux (valery.fremaux@gmail.com)
- * @copyright   2015 Valery Fremaux (www.activeprolearn.com), Florence Labord (labord.florence@gmail.com)
+ * @copyright   2015 Valery Fremaux (www.activeprolearn.com)
  * @license     https://www.gnu.org/copyleft/gpl.html GNU Public License
  */
 defined('MOODLE_INTERNAL') || die();
@@ -30,13 +32,13 @@ if ($hassiteconfig) {
     $key = 'local_aplplot/donutrenderercolors';
     $label = get_string('configdonutrenderercolors', 'local_aplplot');
     $desc = get_string('configdonutrenderercolors_desc', 'local_aplplot');
-    $default = '#00cc00,#66ff66,#ff6666,#ff0000'; // default JQplot colors.
+    $default = '#00cc00,#66ff66,#ff6666,#ff0000'; // Default JQplot colors.
     $settings->add(new admin_setting_configtext($key, $label, $desc, $default));
 
     $key = 'local_aplplot/jqplotshadows';
     $label = get_string('configjqplotshadows', 'local_aplplot');
     $desc = get_string('configjqplotshadows_desc', 'local_aplplot');
-    $default = true; // default JQplot shadows.
+    $default = true; // Default JQplot shadows.
     $settings->add(new admin_setting_configcheckbox($key, $label, $desc, $default));
 
     $key = 'local_aplplot/googlemapsapikey';
