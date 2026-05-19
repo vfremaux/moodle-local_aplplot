@@ -124,7 +124,6 @@ class jqplot {
 
     /**
      * prints any JQplot graph type given a php descriptor and dataset.
-     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
      * @param string $htmlid unique HTML id for the graph
      * @param object $graph 
      * @param array $data
@@ -133,6 +132,7 @@ class jqplot {
      * @param string $addstyle Additional css
      * @param bool $return
      * @param array $ticks additional defs for axis ticks
+     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
      */
     public static function print_graph($htmlid, $graph, $data, $width = 800, $height = 600,
             $addstyle = '', $return = false, $ticks = null) {
@@ -176,8 +176,8 @@ class jqplot {
      * Prints a bidimensional graph (map)
      * Defaults to a percent graph 100 x 100.
      * @param string $htmlid unique HTML id for the graph
-     * @param array $data data to print in graph
-     * @param array $title title for the graph
+     * @param arrayref &$data data to print in graph
+     * @param string $title title for the graph
      * @param array $options options
      * @used-by local_advancedperfs
      */
@@ -296,11 +296,12 @@ class jqplot {
      * Prints a timelined curve.
      * Data is expected as an array of data series, each being an array with [date,value] pairs.
      * @param string $htmlid Unique id of the graph
-     * @param array $data
+     * @param array $data the data to print
      * @param string $title the graph title
      * @param array $labels an array of object of the series containing fields (color,label,lineWidth,showMarker)
      * @param string $ylabel the label of the value axis
-     * @used-by local_advancedperfs 
+     * @param array $options options
+     * @used-by local_advancedperfs
      */
     public static function print_timecurve_bars($htmlid, $data, $title, $labels, $ylabel, $options = []) {
         global $plotid;

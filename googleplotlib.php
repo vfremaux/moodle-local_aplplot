@@ -25,10 +25,15 @@
  */
 namespace local_aplplot;
 
+// phpcs:disable moodle.Commenting.ValidTags.Invalid
 // Abusive PSR12 rule : adds useless spaces in string concatenation.
 // phpcs:disable PSR12.Operators.OperatorSpacing.NoSpaceBefore
 // phpcs:disable PSR12.Operators.OperatorSpacing.NoSpaceAfter
 // phpcs:disable PSR12.Classes.OpeningBraceSpace.Found
+
+defined('MOODLE_INTERNAL') || die();
+
+require_once($CFG->libdir.'/filelib.php');
 
 use stdClass;
 
@@ -39,7 +44,8 @@ class googlemaps {
 
     /**
      * Implements a google maps API V3 wrapper for Moodle
-     * @param $sensor
+     * @param bool $sensor
+     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
      */
     public static function require_js($sensor = 'false') {
         echo "<script type=\"text/javascript\" src=\"http://maps.googleapis.com/maps/api/js?sensor=$sensor\"></script>\n";
@@ -174,7 +180,7 @@ class googlemaps {
     }
 
     /**
-     * get exact static geolocation from a human readable address
+     * Get exact static geolocation from a human readable address
      * Note that google has changed its terms of service for all geographic data exploitation
      * and now needs a Google API key bound to a billing account.
      * @param string $region
@@ -197,21 +203,21 @@ class googlemaps {
         $querystring = 'key='.$config->googlemapsapikey.'&'.$locationurlstring;
 
         // Initialize with the target URL.
-        $ch = curl_init($uri.'?'.$querystring);
+        $curl = new curl($options);
 
-        curl_setopt($ch, CURLOPT_TIMEOUT, 300);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_POST, false);
-        curl_setopt($ch, CURLOPT_USERAGENT, 'Moodle Dashboards');
-        curl_setopt($ch, CURLOPT_POSTFIELDS, '');
-        curl_setopt($ch, CURLOPT_HTTPHEADER, ["Content-Type: text/xml charset=UTF-8"]);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+        $curl->setopt('CURLOPT_TIMEOUT', 300);
+        $curl->setopt('CURLOPT_RETURNTRANSFER', true);
+        $curl->setopt('CURLOPT_POST', false);
+        $curl->setopt('CURLOPT_USERAGENT', 'Moodle Dashboards');
+        $curl->setopt('CURLOPT_POSTFIELDS', '');
+        $curl->setopt('CURLOPT_HTTPHEADER', ["Content-Type: text/xml charset=UTF-8"]);
+        $curl->setopt('CURLOPT_SSL_VERIFYPEER', false);
+        $curl->setopt('CURLOPT_SSL_VERIFYHOST', 0);
 
-        $rawresponse = curl_exec($ch);
+        $rawresponse = $curl->get($uri.'?'.$querystring);
 
         if ($rawresponse === false) {
-            $errors[] = curl_errno($ch) .':'. curl_error($ch);
+            $errors[] = $curl->get_errno() .':'. $curl->get_error($ch);
             return false;
         }
 

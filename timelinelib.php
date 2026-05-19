@@ -58,37 +58,6 @@ class timeline {
     }
 
     /**
-     * Initialize a timeline
-     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
-     */
-    public static function initialize($return = false) {
-        global $timelinegraphs;
-
-        $str = '';
-        $strtmp = '';
-
-        if (!empty($timelinegraphs)) {
-            foreach ($timelinegraphs as $tgraph) {
-                $strtmp .= "timeline_initialize_$tgraph();\n";
-            }
-        }
-
-        $str .= "<script type=\"text/javascript\">
-            function timeline_initialize_all(){
-                {$strtmp}
-            }
-
-            // document.body.onload = timeline_initialize_all;
-            timeline_initialize_all();
-        </script>\n";
-
-        if ($return) {
-            return $str;
-        }
-        echo $str;
-    }
-
-    /**
      * Print a timeline graph
      * @param object $theblock the block calling block instance
      * @param string $htmlid
