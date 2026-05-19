@@ -125,28 +125,31 @@ class jqplot {
     /**
      * prints any JQplot graph type given a php descriptor and dataset.
      * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
-     * @param string $htmlid
-     * @param object $graph
+     * @param string $htmlid unique HTML id for the graph
+     * @param object $graph 
      * @param array $data
-     * @param int $width
-     * @param int $height
+     * @param int $width graph's width
+     * @param int $height graph's height
      * @param string $addstyle Additional css
      * @param bool $return
      * @param array $ticks additional defs for axis ticks
      */
-    public static function print_graph($htmlid, $graph, $data, $width, $height, $addstyle = '', $return = false, $ticks = null) {
+    public static function print_graph($htmlid, $graph, $data, $width = 800, $height = 600,
+            $addstyle = '', $return = false, $ticks = null) {
         global $plotid;
+        global $OUTPUT;
         static $instance = 0;
 
-        $htmlid = $htmlid.'_'.$instance;
+        $template = new StdClass();
+        $template->htmlid = $htmlid.'_'.$instance;
+        $template->addstyle = $addstyle;
         $instance++;
-
-        $str = "<center><div id=\"$htmlid\" style=\"{$addstyle} width:{$width}px; height:{$height}px;\"></div></center>";
-        $str .= '<script type="text/javascript">'."\n";
+        $template->width = $width ?? 800;
+        $template->height = $height ?? 450;
 
         if (!is_null($ticks)) {
-            $ticksvalues = implode("','", $ticks);
-            $str .= "var ticks = ['$ticksvalues']; \n";
+            $template->hasticks = true;
+            $template->ticksvalues = implode("','", $ticks);
         }
 
         $varsetlist = json_encode($data);
@@ -154,23 +157,14 @@ class jqplot {
         $varsetlist = str_replace('{', '[', $varsetlist);
         $varsetlist = str_replace('}', ']', $varsetlist);
 
-        $varsetlist = preg_replace('/"(\d+)\"/', "$1", $varsetlist);
+        $template->varsetlist = preg_replace('/"(\d+)\"/', "$1", $varsetlist);
         $jsongraph = json_encode($graph);
         $jsongraph = preg_replace('/"\$\$\.(.*?)\"/', "$1", $jsongraph);
-        $jsongraph = preg_replace('/"(\$\.jqplot.*?)\"/', "$1", $jsongraph);
-
-        $str .= "
-        $.jqplot.config.enablePlugins = true;
-
-        plot{$plotid} = $.jqplot(
-            '{$htmlid}',
-            $varsetlist,
-            {$jsongraph}
-        );
-        ";
-        $str .= "</script>";
+        $template->jsongraph = preg_replace('/"(\$\.jqplot.*?)\"/', "$1", $jsongraph);
 
         $plotid++;
+
+        $str = $OUTPUT->render_from_template('local_aplplot/jqxgraph', $template);
 
         if ($return) {
             return $str;
@@ -181,98 +175,50 @@ class jqplot {
     /**
      * Prints a bidimensional graph (map)
      * Defaults to a percent graph 100 x 100.
+     * @param string $htmlid unique HTML id for the graph
+     * @param array $data data to print in graph
+     * @param array $title title for the graph
+     * @param array $options options
+     * @used-by local_advancedperfs
      */
-    public static function print_labelled_graph(&$data, $title, $htmlid, $options) {
+    public static function print_labelled_graph($htmlid, &$data, $title, $options) {
         global $plotid;
+        global $OUTPUT;
         static $instance = 0;
 
         // Check option defaults.
 
-        if (empty($options['xmin'])) {
-            $options['xmin'] = 0;
-        }
-
-        if (empty($options['ymin'])) {
-            $options['ymin'] = 0;
-        }
-
-        if (empty($options['xmax'])) {
-            $options['xmax'] = 100;
-        }
-
-        if (empty($options['ymax'])) {
-            $options['ymax'] = 100;
-        }
-
-        if (empty($options['xunit'])) {
-            $options['xunit'] = '\\%';
-        }
-
-        if (empty($options['yunit'])) {
-            $options['yunit'] = '\\%';
-        }
+        $options['xmin'] = $options['xmin'] ?? 0;
+        $options['ymin'] = $options['ymin'] ?? 0;
+        $options['xmax'] = $options['xmax'] ?? 100;
+        $options['ymax'] = $options['ymax'] ?? 100;
+        $options['xunit'] = $options['xunit'] ?? '\\%';
+        $options['yunit'] = $options['yunit'] ?? '\\%';
+        $options['xlabel'] = str_replace("'", "\\'", $options['xlabel'] ?? '');
+        $options['ylabel'] = str_replace("'", "\\'", $options['ylabel'] ?? '');
 
         $htmlid = $htmlid.'_'.$instance;
         $instance++;
 
-        $str = '';
-
-        $str .= '<center>';
-        $str .= '<div id="'.$htmlid.'"
-                      class="aplplot-jqmap"
-                      style="width:'.$options['width'].'px; height:'.$options['height'].'px;"></div>';
-        $str .= '</center>';
-        $str .= '<script type="text/javascript" language="javascript">';
-        $str .= '
-            $.jqplot.config.enablePlugins = true;
-        ';
+        $template = (object) $options;
+        $template->htmlid = $htmlid;
 
         $title = addslashes($title);
+        $template->title = str_replace("'", "\\'", $title);
+        $template->rawline = self::labelled_rawline($data, 'data_'.$htmlid);
 
-        $str .= self::labelled_rawline($data, 'data_'.$htmlid);
-
-        $title = str_replace("'", "\\'", $title);
-        $options['xlabel'] = str_replace("'", "\\'", $options['xlabel']);
-        $options['ylabel'] = str_replace("'", "\\'", $options['ylabel']);
-
-        $str .= "
-            plot{$plotid} = \$.jqplot(
-                '{$htmlid}',
-                [data_{$htmlid}],
-                {
-                title:'{$title}',
-                seriesDefaults:{
-                    renderer:\$.jqplot.LineRenderer,
-                      showLine:false,
-                      showMarker:true,
-                      shadowAngle:135,
-                      markerOptions:{size:15, style:'circle'},
-                      shadowDepth:2
-                },
-                axes:{ xaxis:{label:'{$options['xlabel']}',
-                              min:{$options['xmin']},
-                              max:{$options['xmax']},
-                              tickOptions:{formatString:'%d {$options['xunit']}'}},
-                       yaxis:{label:'{$options['ylabel']}',
-                              min:{$options['ymin']},
-                              max:{$options['ymax']},
-                              tickOptions:{formatString:'%d {$options['yunit']}'}}
-                },
-                cursor:{zoom:true, showTooltip:false}
-            });
-        ";
-
-        $str .= "</script>";
         $plotid++;
 
-        return $str;
+        return $OUTPUT->render_from_template('local_aplplot/jqxlabelledgraph', $template);
     }
 
     /**
+     * DATA FORMATER : formats data for a bar graph.
      * Plots multiple date series, formatting the data array.
-     *
+     * @param string $name
+     * @param array $data
      */
-    public static function barline($name, &$data) {
+    public static function barline($name, $data) {
 
         $str = "$name = ";
 
@@ -287,10 +233,11 @@ class jqplot {
     }
 
     /**
-     * Prints a single data serie for simple graphs.
-     *
+     * DATA FORMATER : formats data for a simple line graph.
+     * @param string $name
+     * @param array $data
      */
-    public static function simplebarline($name, &$data) {
+    public static function simplebarline($name, $data) {
 
         $str = "var $name = ";
         $str .= '['.implode(',', array_values($data)).']';
@@ -300,15 +247,15 @@ class jqplot {
 
     /**
      * prints a simple bargraph.
+     * @param string $htmlid an html identifier seed. Will be appended with an automatic instance index.
      * @param arrayref $data an associative array with one simple 'label' => value pairs.
      * @param arrayref $ticks an associative array with one simple 'label' => value pairs.
      * @param string $title a text title.
-     * @param string $htmlid an html identifier seed. Will be appended with an automatic instance index.
      * @param array $options some rendering options to inject in jqplot template, to override defaults.
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.NPathComplexity)
      */
-    public static function print_simple_bargraph($data, $ticks, $title, $htmlid, $options = []) {
+    public static function print_simple_bargraph($htmlid, $data, $ticks, $title, $options = []) {
         global $plotid, $OUTPUT;
 
         $htmlid = $htmlid.'_'.$plotid;
@@ -318,6 +265,7 @@ class jqplot {
             return '';
         }
 
+        $template = new StdClass();
         $template->direction = $options['direction'] ?? 'vertical';
         $template->xmin = $options['xmin'] ?? 0;
         $template->xmax = $options['xmax'] ?? 100;
@@ -347,14 +295,16 @@ class jqplot {
     /**
      * Prints a timelined curve.
      * Data is expected as an array of data series, each being an array with [date,value] pairs.
+     * @param string $htmlid Unique id of the graph
      * @param array $data
      * @param string $title the graph title
-     * @param string $htmlid
      * @param array $labels an array of object of the series containing fields (color,label,lineWidth,showMarker)
      * @param string $ylabel the label of the value axis
+     * @used-by local_advancedperfs 
      */
-    public static function print_timecurve_bars($data, $title, $htmlid, $labels, $ylabel, $options = []) {
+    public static function print_timecurve_bars($htmlid, $data, $title, $labels, $ylabel, $options = []) {
         global $plotid;
+        global $OUTPUT;
 
         $htmlid = $htmlid.'_'.$plotid;
 
@@ -402,14 +352,15 @@ class jqplot {
 
     /**
      * Prints a donut from a simple serie of label => value data.
+     * @param $htmlid the unique graph html id
+     * @param $data
+     * @param string $class
+     * @param array $options
+     * @used-by local_my
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.NPathComplexity)
-     * @param $data
-     * @param $htmlid
-     * @param string $class
-     * @param array $attributes
      */
-    public static function simple_donut($data, $htmlid, $class, $attributes = null) {
+    public static function simple_donut($htmlid, $data, $class, $options = null) {
         global $plotid, $OUTPUT;
 
         if (is_null($plotid)) {
@@ -427,34 +378,25 @@ class jqplot {
 
         $template->plotattrs = '';
         $template->htmlstyle = '';
-        if (array_key_exists('height', $attributes)) {
-            $template->plotattrs .= 'height: '.$attributes['height'].',';
-            $template->htmlstyle .= ' min-height:'.$attributes['height'].'px; ';
+        if (array_key_exists('height', $options)) {
+            $template->plotattrs .= 'height: '.$options['height'].',';
+            $template->htmlstyle .= ' min-height:'.$options['height'].'px; ';
         }
 
-        if (array_key_exists('width', $attributes)) {
-            $template->plotattrs .= 'width: '.$attributes['width'].',';
-            $template->htmlstyle .= ' min-width:'.$attributes['width'].'px; width:'.$attributes['width'].'px; ';
+        if (array_key_exists('width', $options)) {
+            $template->plotattrs .= 'width: '.$options['width'].',';
+            $template->htmlstyle .= ' min-width:'.$options['width'].'px; width:'.$options['width'].'px; ';
         }
 
-        if (array_key_exists('diameter', $attributes)) {
-            $template->diameter = $attributes['diameter'];
-        } else {
-            $template->diameter = 100;
-        }
-
-        if (array_key_exists('thickness', $attributes)) {
-            $template->thickness = $attributes['thickness'];
-        } else {
-            $template->thickness = 10;
-        }
+        $template->diameter = $options['diameter'] ?? 100;
+        $template->thickness = $options['thickness'] ?? 10;
 
         $template->location = 'w';
-        if (array_key_exists('legendlocation', $attributes)) {
-            if (!in_array($attributes['legendlocation'], ['w', 's', 'e', 'n'])) {
+        if (array_key_exists('legendlocation', $options)) {
+            if (!in_array($options['legendlocation'], ['w', 's', 'e', 'n'])) {
                 throw new coding_exception("Bad legend location value");
             }
-            $template->legendlocation = $attributes['legendlocation'];
+            $template->legendlocation = $options['legendlocation'];
         }
 
         $template->jsondata = self::encode_array($data);
@@ -470,8 +412,8 @@ class jqplot {
         // Provide as many colors as input dimensions. Explicitely defined colors will superseede
         // randomly generated colors. Attribute colors will superseed any other.
         for ($i = 0; $i < $colornum; $i++) {
-            if (array_key_exists('colors', $attributes) && isset($attributes['colors'][$i])) {
-                $colors[] = $attributes['colors'][$i];
+            if (array_key_exists('colors', $options) && isset($options['colors'][$i])) {
+                $colors[] = $options['colors'][$i];
             } else if (isset($customcolors[$i])) {
                 $colors[] = $customcolors[$i];
             } else {
