@@ -159,7 +159,7 @@ class googlemaps {
             $template->markers[] = $markertpl;
         }
 
-        return $OUTPUT->render_from_template('local_vflibs/googlemapform', $template);
+        return $OUTPUT->render_from_template('local_aplplot/googlemapform', $template);
     }
 
     /**
@@ -174,7 +174,7 @@ class googlemaps {
      */
     public static function get_geolocation($region, $address, $postalcode, $city, &$errors) {
 
-        $config = get_config('local_vflibs');
+        $config = get_config('local_aplplot');
 
         $locationurlstring = 'region='.$region.'&address='.urlencode($address).','.urlencode($postalcode.' '.$city);
 

@@ -23,7 +23,7 @@
  * @license     https://www.gnu.org/copyleft/gpl.html GNU Public License
  */
 
-namespace local_vflibs;
+namespace local_aplplot;
 require_once($CFG->dirroot.'/local/aplplot/chartjsplus/chart_base_trait.php');
 defined('MOODLE_INTERNAL') || die();
 

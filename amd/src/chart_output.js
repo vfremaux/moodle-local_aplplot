@@ -1,4 +1,3 @@
-<?php
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -15,23 +14,22 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Version details.
+ * Chart output for APLCore extended chart.js.
  *
- * @package     local_aplplot
- * @author      Valery Fremaux <valery.fremaux@gmail.com>
- * @copyright   2026 onwards Valery Fremaux (https://www.activeprolearn.com)
- * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * Proxy to the default output module.
+ *
+ * @copyright  2022 Valery Fremaux - www.activeprolearn.com
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @module     local_aplplot/chart_output
  */
+define(['local_aplplot/chart_output_chartjs'], function(Output) {
 
-defined('MOODLE_INTERNAL') || die();
+    /**
+     * @exports module:local_aplplot/chart_output
+     * @extends {module:local_aplplot/chart_output_chartjs}
+     */
+    var defaultModule = Output;
 
-$plugin->version  = 2026041300;   // The (date) version of this plugin.
-$plugin->requires = 2022112801;   // Requires this Moodle version.
-$plugin->component = 'local_aplplot';
-$plugin->release = '5.1.0 (Build 2026041300)';   // Release.
-$plugin->maturity = MATURITY_RC;
-$plugin->supported = [500, 503];
+    return defaultModule;
 
-// Non moodle attributes.
-$plugin->codeincrement = '5.1.0002';
-$plugin->privacy = 'public';
+});

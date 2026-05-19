@@ -1,0 +1,97 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template local_aplplot/timeline
+
+    timeline rendering utility template with predefined options.
+
+    Example context (json):
+    {
+        "pagetitle": "A timeline graph",
+        "lat": "10.45345",
+        "lng": "23.4545",
+        "zoom": "5",
+        "markers": [{
+            "lat": "10.6567",
+            "lng": "23.789",
+            "title":"A marker",
+            "iconurl": "https://anurl.to.icon"}]
+    }
+}}
+<!-- local_aplplot/openlayersframe -->
+<!doctype html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="https://cdn.rawgit.com/openlayers/openlayers.github.io/master/en/v5.3.0/css/ol.css" type="text/css">
+    <style>
+        .map {
+            height: 100%;
+            width: 100%;
+        }
+    </style>
+    <script src="https://cdn.rawgit.com/openlayers/openlayers.github.io/master/en/v5.3.0/build/ol.js"></script>
+    <title>{{pagetitle}}</title>
+</head>
+<body>
+<div id="map" class="map"></div>
+
+<script type="text/javascript">
+    var map = new ol.Map({
+        target: 'map',
+        layers: [
+            new ol.layer.Tile({
+            source: new ol.source.OSM()
+        })],
+        view: new ol.View({
+            center: ol.proj.fromLonLat([{{lng}}, {{lat}}]),
+            zoom: {{zoom}}
+        })
+    });
+
+    // Set markers.
+    var markerslayer = new OpenLayers.Layer.Vector("labels");
+    map.addLayer(markerlayer);
+
+    var lonLatlabel, pointlabel, featurepoint, featureicon;
+
+    {{#markers}}
+    lonLatlabel = new OpenLayers.LonLat({{lng}}, {{lat}}).transform(
+        new OpenLayers.Projection("EPSG:4326"),
+        map.getProjectionObject()
+    );
+
+    pointlabel = new OpenLayers.Geometry.Point(lonLatlabel.lon, lonLatlabel.lat);
+    featurepoint = new OpenLayers.Feature.Vector(
+        pointlabel, null, {label:"{{title}}",fontColor:"blue"}
+    );
+    markerslayer.addFeatures([featurepoint]);
+
+    featureicon = new OpenLayers.Feature.Vector(
+        pointlabel, null, {src:"{{iconurl}}",
+                            anchor: [0.5, 46],
+                            anchorXUnits: 'fraction',
+                            anchorYUnits: 'pixels',
+                            opacity: 0.75}
+     );
+
+    markerslayer.addFeatures([featureicon]);
+    {{/markers}}
+
+</script>
+</body>
+</html>
+<!-- /local_aplplot/openlayersframe -->

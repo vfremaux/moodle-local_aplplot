@@ -214,7 +214,7 @@ class jqplot {
 
         $str .= '<center>';
         $str .= '<div id="'.$htmlid.'"
-                      class="vflibs-jqmap"
+                      class="aplplot-jqmap"
                       style="width:'.$options['width'].'px; height:'.$options['height'].'px;"></div>';
         $str .= '</center>';
         $str .= '<script type="text/javascript" language="javascript">';
@@ -380,7 +380,7 @@ class jqplot {
 
         $str = '<center>';
         $str .= '<div id="timeBars'.$htmlid.'"
-                      class="vflibs-jqtimebars"
+                      class="aplplot-jqtimebars"
                       style="width:800px; height:350px;"></div>';
         $str .= '</center>';
         $str .= '<script type="text/javascript">'."\n";
@@ -473,7 +473,7 @@ class jqplot {
             $plotid = 1;
         }
 
-        $config = get_config('local_vflibs');
+        $config = get_config('local_aplplot');
 
         $template = new StdClass;
 
@@ -538,7 +538,7 @@ class jqplot {
         $template->customcolors = "'".implode("','", $colors)."'";
 
         $plotid++;
-        return $OUTPUT->render_from_template('local_vflibs/jqplotsimpledonut', $template);
+        return $OUTPUT->render_from_template('local_aplplot/jqplotsimpledonut', $template);
     }
 
     /**

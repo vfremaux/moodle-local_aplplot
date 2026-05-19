@@ -35,7 +35,12 @@ $id = required_param('mapid', PARAM_TEXT);
 $mapid = 'map_'.$id;
 $markers = optional_param_array('markers', [], PARAM_TEXT); // Array of markers.
 
-$params = ['lat' => $lat, 'lng' => $lng, 'options' => $options, 'mapid' => $id];
+$params = [
+    'lat' => $lat,
+    'lng' => $lng,
+    'options' => $options,
+    'mapid' => $id,
+];
 $url = new moodle_url('/local/aplplot/googlemap.php', $params);
 $PAGE->set_context($systemcontext);
 
@@ -67,7 +72,7 @@ if (!empty($markerimages)) {
             $markerimagetpl->classname = str_replace('mk_', '', $imname);
             $markerimagetpl->imfullpath = moodle_url::make_plugin_file(
                 $systemcontext->id,
-                'local_vflibs',
+                'local_aplplot',
                 'googlemarks',
                 0,
                 $imfile->get_filepath(),

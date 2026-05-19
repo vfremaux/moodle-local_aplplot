@@ -1,0 +1,95 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template local_aplplot/jqxbarchart
+    @todo unify variable names with other jq templates
+
+    Bar Chart rendering utility template with predefined options.
+
+    Example context (json):
+    {
+        "id": "564567656",
+        "width": "450",
+        "height": "350",
+        "desc": "",
+        "name": "A bar graph",
+        "datalist": "{}",
+        "titlepadding": "",
+        "xaxis": "",
+        "xflip": false,
+        "yflip": false,
+        "direction": "horizontal",
+        "seriesarr": "{}"
+    }
+}}
+<!-- local_aplplot/jqxbarchart -->
+<center>
+<div id="jqxBarChart{{id}}" class="aplcore-jqbarchart" style="width:{{width}}px; height:{{height}}px"></div>
+</center>
+
+<script type="text/javascript">
+$(document).ready(function () {
+
+    // prepare chart data
+    var graphdata{{id}} = {{{datalist}}};
+
+    // prepare jqxChart settings
+    var settings{{id}} = {
+        title: "{{name}}",
+        description: "{{desc}}",
+        showLegend: true,
+        enableAnimations: true,
+        padding: {{padding}},
+        titlePadding: {{titlepadding}},
+        source: graphdata{{id}},
+        xAxis: {
+            dataField: '{{xaxis}}',
+            gridLines: {
+                visible: true
+            },
+            flip: {{xflip}},
+            labels: {
+                visible: true,
+                angle:90
+            }
+        },
+        valueAxis: {
+            flip: {{yflip}},
+            labels: {
+                visible: true,
+                angle:90
+            }
+        },
+        colorScheme: 'scheme01',
+        seriesGroups: [
+            {
+                type: 'column',
+                orientation: '{{direction}}',
+                columnsGapPercent: 50,
+                toolTipFormatSettings: {
+                    thousandsSeparator: ','
+                },
+                series: {{{seriesarr}}}
+            }
+        ]
+    };
+
+    // setup the chart
+    $('#jqxBarChart{{id}}').jqxChart(settings{{id}});
+});
+</script>
+<!-- /local_aplplot/jqxbarchart -->
