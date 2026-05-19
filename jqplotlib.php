@@ -25,6 +25,10 @@
 namespace local_aplplot;
 
 // phpcs:disable moodle.Commenting.ValidTags.Invalid
+// Abusive PSR12 rule : adds useless spaces in string concatenation.
+// phpcs:disable PSR12.Operators.OperatorSpacing.NoSpaceBefore
+// phpcs:disable PSR12.Operators.OperatorSpacing.NoSpaceAfter
+// phpcs:disable PSR12.Classes.OpeningBraceSpace.Found
 
 use moodle_exception;
 use coding_exception;
@@ -49,6 +53,7 @@ class jqplot {
         if ($jqplotloaded) {
             return;
         }
+        $PAGE->requires->js_call_amd('local_aplplot/jqplot', 'init'); // Common setup.
         $PAGE->requires->jquery_plugin('jqplot', 'local_aplplot');
         $jqplotloaded = true;
     }
@@ -313,39 +318,16 @@ class jqplot {
             return '';
         }
 
-        if (empty($options['direction'])) {
-            $options['direction'] = 'vertical';
-        }
+        $template->direction = $options['direction'] ?? 'vertical';
+        $template->xmin = $options['xmin'] ?? 0;
+        $template->xmax = $options['xmax'] ?? 100;
+        $template->width = $options['width'] ?? 680;
+        $template->height = $options['height'] ?? 680;
+        $template->xunit = $options['xunit'] ?? '\\%';
+        $template->xlabel = $options['xlabel'] ?? '';
+        $template->seriename = $options['seriename'] ?? '';
 
-        if (empty($options['xmin'])) {
-            $options['xmin'] = 0;
-        }
-
-        if (empty($options['xmax'])) {
-            $options['xmax'] = 100;
-        }
-
-        if (empty($options['width'])) {
-            $options['width'] = 680;
-        }
-
-        if (empty($options['height'])) {
-            $options['height'] = 680;
-        }
-
-        if (empty($options['xunit'])) {
-            $options['xunit'] = '\\%';
-        }
-
-        if (empty($options['xlabel'])) {
-            $options['xlabel'] = '';
-        }
-
-        if (empty($options['seriename'])) {
-            $options['seriename'] = '';
-        }
-
-        $template = new StdClass;
+        $template = new StdClass();
         $template->htmlid = $htmlid;
         $template->plotid = $plotid;
         $template->options = $options;
@@ -359,7 +341,7 @@ class jqplot {
         }
         $template->ticksdata = self::simplebarline('ticks'.$htmlid, $ticks);
 
-        return $OUTPUT->render_from_template('local_aplplot/bargraph', $template);
+        return $OUTPUT->render_from_template('local_aplplot/jqxbargraph', $template);
     }
 
     /**
@@ -371,21 +353,17 @@ class jqplot {
      * @param array $labels an array of object of the series containing fields (color,label,lineWidth,showMarker)
      * @param string $ylabel the label of the value axis
      */
-    public static function print_timecurve_bars($data, $title, $htmlid, $labels, $ylabel) {
+    public static function print_timecurve_bars($data, $title, $htmlid, $labels, $ylabel, $options = []) {
         global $plotid;
-        static $instance = 0;
 
-        $htmlid = $htmlid.'_'.$instance;
-        $instance++;
+        $htmlid = $htmlid.'_'.$plotid;
 
-        $str = '<center>';
-        $str .= '<div id="timeBars'.$htmlid.'"
-                      class="aplplot-jqtimebars"
-                      style="width:800px; height:350px;"></div>';
-        $str .= '</center>';
-        $str .= '<script type="text/javascript">'."\n";
+        $template = new StdClass();
+        $template->htmlid = $htmlid;
 
-        $title = addslashes($title);
+        $template->width = $options['width'] ?? 800;
+        $template->height = $options['height'] ?? 350;
+        $template->title = addslashes($title);
 
         // Make curves from each x, y pair and print them to Javascript.
         $xserie = $data[0]; // Date stamps.
@@ -404,39 +382,9 @@ class jqplot {
             $str .= "\n";
             $varset[] = 'line'.$i;
         }
-        $varsetlist = implode(',', $varset);
+        $template->varsetlist = implode(',', $varset);
+        $template->ylabel = $ylabel;
 
-        $str .= "
-        \$.jqplot.config.enablePlugins = true;
-
-        plot{$plotid} = $.jqplot(
-            'timeBars{$htmlid}',
-            [$varsetlist],
-            {
-                title: '{$title}',
-                seriesDefaults:{
-                    renderer:$.jqplot.BarRenderer,
-                      rendererOptions:{barDirection:'vertical', barWidth: 10, barPadding: 6, barMargin:15},
-                      shadowAngle:135
-                },
-                cursor: {
-                    show: false
-                },
-                axes: {
-                    xaxis: {
-                        renderer: $.jqplot.DateAxisRenderer,
-                        tickRenderer: $.jqplot.CanvasAxisTickRenderer,
-                        tickOptions:{formatString:'%d/%m/%y', angle: -45, fontSize: '8pt'},
-                        tickInterval:'1 week'
-                    },
-                yaxis: {
-                    autoscale:true,
-                    tickOptions:{formatString:'%d'},
-                    label:'$ylabel'
-                }
-            },
-            series:[
-        ";
         $labelarr = [];
         foreach ($labels as $label) {
             $labelobj = (object)$label;
@@ -444,17 +392,12 @@ class jqplot {
             $labelstr .= "color:'{$labelobj->color}', showMarker:{$labelobj->showMarker}}";
             $labelarr[] = $labelstr;
         }
-        $str .= implode(',', $labelarr);
-        $str .= "
-                ]
-            }
-        );
-         ";
-        $str .= '</script>';
+        // A json array content.
+        $template->seriesdata = implode(',', $labelarr);
 
         $plotid++;
 
-        return $str;
+        return $OUTPUT->render_from_template('local_aplplot/jqxtimecurve', $template);
     }
 
     /**
@@ -475,7 +418,7 @@ class jqplot {
 
         $config = get_config('local_aplplot');
 
-        $template = new StdClass;
+        $template = new StdClass();
 
         $template->htmlid = $htmlid;
         $template->class = $class;

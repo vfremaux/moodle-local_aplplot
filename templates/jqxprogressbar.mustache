@@ -1,17 +1,47 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
 
-<!-- local_vflibs/jqxprogressbar -->
-<script type="text/javascript">
-    $(document).ready(function () {
-        $("#{{name}}").jqxProgressBar({
-            width: "{{width}}",
-            height: "{{height}}",
-            value: {{value}},
-            template: '{{template}}',
-            animationDuration: {{animation}}
-        }
-    );
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template local_aplplot/jqxprogressbar
+    @todo unify variable names with other jq templates
+
+    Bar Chart rendering utility template with predefined options.
+
+    Example context (json):
+    {
+        "name": "Progress"
+        "value": "80%",
+        "width": "450px",
+        "height": "24px",
+        "template": "",
+        "animation": "5"
+    }
+}}
+
+<!-- local_aplcore/jqxprogressbar -->
+<div style="margin-top: 10px; overflow: hidden;" id="{{name}}" title="{{#str}}completionpercent, local_aplcore, {{value}} {{/str}}"></div>
+<!-- /local_aplcore/jqxprogressbar -->
+{{#js}}
+$(document).ready(function () {
+    $("#{{name}}").jqxProgressBar({
+        width: "{{width}}",
+        height: "{{height}}",
+        value: {{value}},
+        template: '{{template}}',
+        animationDuration: {{animation}}
+    });
 });
-</script>
-<div style="margin-top: 10px; overflow: hidden;" id="{{name}}" title="{{#str}}completionpercent, local_vflibs, {{value}} {{/str}}">
-</div>
-<!-- /local_vflibs/jqxprogressbar -->
+{{/js}}

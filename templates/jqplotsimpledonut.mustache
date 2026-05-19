@@ -15,7 +15,7 @@
     along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 }}
 {{!
-    @template local_aplcore/googlesimpledonut
+    @template local_aplplot/googlesimpledonut
 
     Example context (json):
     {
@@ -31,11 +31,12 @@
         "legendlocation": "S"
     }
 }}
-<!-- jqplotsimpledonut -->
+<!-- local_aplplot/jqplotsimpledonut has_js-->
 <div id="{{htmlid}}" class="{{{class}}}" style="{{htmlstyle}}"></div>
+<!-- /local_aplplot/jqplotsimpledonut -->
 
-<script type="text/javascript">
-    $.jqplot.config.enablePlugins = true;
+{{#js}}
+$(document).ready(function () {
 
     var data{{htmlid}} = {{{jsondata}}};
 
@@ -89,5 +90,5 @@
     };
 
     var plot{{plotid}} = $.jqplot('{{htmlid}}', [data{{htmlid}}], plotconfig{{plotid}});
-</script>
-<!-- /jqplotsimpledonut -->
+});
+{{/js}}

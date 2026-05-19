@@ -31,4 +31,3 @@ $string['configjqplotshadows_desc'] = 'Si activé, ajouter un ombrage sur les g�
 $string['missinggooglekey'] = 'Vous n\'avez pas entré de clef d\'API Google. Voir la documentation https://developers.google.com/maps/documentation/javascript/get-api-key';
 $string['pluginname'] = 'Librairies de graphage pour les plugins APL';
 
-

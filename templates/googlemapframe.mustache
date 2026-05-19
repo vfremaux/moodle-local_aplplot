@@ -14,6 +14,37 @@
     You should have received a copy of the GNU General Public License
     along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 }}
+{{!
+    @template local_aplplot/googlemapframe
+
+    Iframe content for googlemap calls.
+
+    Example context (json):
+    {
+        "protocol": "https",
+        "googleapikey": "3453242345",
+        "lat": "10.45345",
+        "lng": "23.4545",
+        "optionsstr": "",
+        "markerimages": [
+            {
+                "classname": "someclass",
+                "imfullpath": "",
+                "sizeinfo0": "24",
+                "sizeinfo1": "24"
+            }
+        ],
+        "markers": [
+            {
+                "lat": "10.678",
+                "lng": "23.956",
+                "title": "Mark 1",
+                "markerclass": "",
+                "hasshadow": true
+            }
+        ]
+    }
+}}
 <!-- local_aplplot/googlemapframe -->
 <!DOCTYPE html>
 <html>
@@ -25,9 +56,9 @@
   #map_canvas { height: 100% }
 </style>
 
-<script type="text/javascript" src="{{protocol}}://maps.googleapis.com/maps/api/js?key={{googleapikey}}&callback=initialize"></script>
+<script src="{{protocol}}://maps.googleapis.com/maps/api/js?key={{googleapikey}}&callback=initialize"></script>
 
-<script type="text/javascript">
+<script>
 
     function initialize() {
         var latlng = new google.maps.LatLng({{lat}}, {{lng}});
@@ -113,7 +144,7 @@
 </head>
 <body onload="initialize()">
 {{^googleapikey}}
-{{#str}}missinggooglekey, local_vflibs{{/str}}
+{{#str}}missinggooglekey, local_aplplot{{/str}}
 {{/googleapikey}}
 {{#googleapikey}}
   <div id="map_canvas" style="width:100%; height:100%"></div>

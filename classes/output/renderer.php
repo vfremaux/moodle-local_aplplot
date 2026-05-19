@@ -15,23 +15,37 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * @package local_aplplot
- * @author valery.fremaux@gmail.com
+ * Plugin renderer
+ *
+ * @package     local_aplplot
+ * @author      Valery Fremaux (valery.fremaux@gmail.com)
+ * @copyright   2015 Valery Fremaux (www.activeprolearn.com)
+ * @license     https://www.gnu.org/copyleft/gpl.html GNU Public License
  */
 namespace local_aplplot\output;
 
+// phpcs:disable moodle.Commenting.ValidTags.Invalid
+// Abusive PSR12 rule : adds useless spaces in string concatenation.
+// phpcs:disable PSR12.Operators.OperatorSpacing.NoSpaceBefore
+// phpcs:disable PSR12.Operators.OperatorSpacing.NoSpaceAfter
+// phpcs:disable PSR12.Classes.OpeningBraceSpace.Found
+
 use plugin_renderer_base;
+use local_aplplot\{chart_bar, chart_line, chart_pie};
 use StdClass;
 
-defined('MOODLE_INTERNAL') || die();
-
+/**
+ * Renderer implementation.
+ */
 class renderer extends plugin_renderer_base {
 
-    // JQWidget wrappers.
-    /*
+    /**
      * Properties : max, width, height
+     * @param string $name plot name.
+     * @param object|array $data
+     * @param object $properties
      */
-    public function jqw_bargauge_simple($name, $data, $properties = null, $labels = array()) {
+    public function jqw_bargauge_simple($name, $data, $properties = null) {
 
         $properties = (object) $properties;
 
@@ -58,7 +72,6 @@ class renderer extends plugin_renderer_base {
             $properties->animationduration = 500;
         }
 
-        $properties->value = $value;
         $properties->name = $name;
         $properties->datalist = implode(', ', $data);
 
@@ -70,6 +83,12 @@ class renderer extends plugin_renderer_base {
         return $this->output->render_from_template('local_aplplot/jqxsimplegauge', $properties);
     }
 
+    /**
+     * Prints a progress bar using JQPlot.
+     * @param string $name
+     * @param string $value
+     * @param array $properties
+     */
     public function jqw_progress_bar($name, $value, $properties = []) {
 
         $properties = (object)$properties;
@@ -90,55 +109,35 @@ class renderer extends plugin_renderer_base {
         $properties->value = $value;
         $properties->name = $name;
 
-        /*
-        $str = '';
-        $str .= '<script type="text/javascript">';
-        $str .= '    $(document).ready(function ()';
-        $str .= '    {';
-        $str .= '       $("#'.$name.'").jqxProgressBar({';
-        $str .= '           width: "'.$properties['width'].'",';
-        $str .= '           height: "'.$properties['height'].'",';
-        $str .= '           value: '.$value.',';
-        $str .= '           template: \''.$properties['template'].'\',';
-        $str .= '           animationDuration: '.$properties['animation'].'});';
-        $str .= '    });';
-        $str .= '</script>';
-        $str .= '<div style="margin-top: 10px; overflow: hidden;" id="'.$name.'" title="'.get_string('completionpercent', 'local_aplplot', $value).'"></div>';
-        */
-
         return $this->output->render_from_template('local_aplplot/jqxprogressbar', $properties);
     }
 
     /**
+     * Prints a bulletchart
      * @param string $name
      * @param array $properties array with ('width', 'height', 'desc', 'barsize', 'tooltip') keys
      * @param array $ranges an array of range objects having ('start', 'end', 'color', 'opacity') keys
      * @param object $pointer an object with ('value', 'label', 'size', 'color') keys
      * @param object $target an object with ('value', 'label', 'size', 'color') keys
      * @param object $ticks an object with ('position', 'interval', 'size') keys
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
     public function jqw_bulletchart($name, $properties, $ranges, $pointer, $target, $ticks = null) {
 
         $properties = (object)$properties;
+        $properties->name = $name;
 
         if (is_null($ticks)) {
-            $ticks = new Stdclass;
+            $ticks = new StdClass();
             $ticks->position = 'both';
             $ticks->interval = 50;
             $ticks->size = 10;
         }
 
-        if (!isset($properties->barsize)) {
-            $properties->barsize = 20;
-        }
-
-        if (!isset($properties->bgcolor)) {
-            $properties->bgcolor = '#e0e0e0';
-        }
-
-        if (!isset($properties->bgopacity)) {
-            $properties->bgopacity = 1;
-        }
+        $properties->barsize = $properties->barsize ?? 20;
+        $properties->bgcolor = $properties->bgcolor ?? '#e0e0e0';
+        $properties->bgopacity = $properties->bgopacity ?? 1;
 
         $properties->firstrange = true;
         if (empty($ranges)) {
@@ -151,12 +150,15 @@ class renderer extends plugin_renderer_base {
                 'firstrange' => $properties->firstrange,
             ];
             $ranges[] = $defaultrange;
-            $firstrange = false;
+            $properties->firstrange = false;
         }
 
         $rangesarr = [];
         foreach ($ranges as $range) {
-            $rangesarr[] = '{startValue: '.$range->start.', endValue: '.$range->end.', color: \''.$range->color.'\', opacity: '.$range->opacity.'}';
+            $rangesarr[] = '{startValue: '.$range->start.
+                ', endValue: '.$range->end.
+                ', color: \''.$range->color.
+                '\', opacity: '.$range->opacity.'}';
         }
         $properties->ranges = implode(', ', $rangesarr);
 
@@ -183,54 +185,6 @@ class renderer extends plugin_renderer_base {
         if (empty($properties->tooltip)) {
             $properties->tooltip = 'true';
         }
-
-        /*
-        $str = '';
-
-        $str .= '<div id="jqxBulletChart'.$properties['id'].'" class="jqwidgets-bulletchart"></div>'."\n";
-        $str .= '<script type="text/javascript">';
-        $str .= '    $(document).ready(function () {'."\n";
-        $str .= '        $("#jqxBulletChart'.$properties['id'].'").jqxBulletChart({'."\n";
-        $str .= '            width: "'.$properties['width'].'", '."\n";
-        $str .= '            height: "'.$properties['height'].'", '."\n";
-        $str .= '            barSize: "'.$properties['barsize'].'%", '."\n";
-        $str .= '            title: "'.$name.'",'."\n";
-        if (!empty($properties['desc'])) {
-            $str .= '            description: "'.$properties['desc'].'",'."\n";
-        } else {
-            $str .= '            description: "",'."\n";
-        }
-
-        if (!empty($ranges)) {
-            $str .= '            ranges: [';
-            foreach ($ranges as $r) {
-                if (empty($r->opacity)) {
-                    $r->opacity = '1';
-                }
-                $rangestr = '    { startValue: '.(0 + $r->start).', endValue: '.(0 + $r->end).', color: "'.$r->color;
-                $rangestr .= '", opacity: '.$r->opacity.'} '."\n";
-                $rangearr[] = $rangestr;
-            }
-            $str .= implode(',', $rangearr);
-            $str .= '    ],'."\n";
-        }
-
-        if (!empty($pointer)) {
-            $str .= 'pointer: { value: '.(0 + $pointer->value).', label: "'.$pointer->label.'", size: "'.$pointer->size;
-            $str .= '%", color: "'.$pointer->color.'" },'."\n";
-        }
-        if (!empty($target)) {
-            $str .= 'target: { value: '.(0 + $target->value).', label: "'.$target->label.'", size: '.$target->size;
-            $str .= ', color: "'.$target->color.'" },'."\n";
-        }
-
-        $str .= 'ticks: { position: "'.$ticks->position.'", interval: '.$ticks->interval.', size: '.$ticks->size.' },'."\n";
-        $str .= 'labelsFormat: "'.$properties['ticklabelformat'].'",'."\n";
-        $str .= 'showTooltip: '.$properties['tooltip']."\n";
-        $str .= '    });'."\n";
-        $str .= '});'."\n";
-        $str .= '</script>'."\n";
-        */
 
         return $this->output->render_from_template('local_aplplot/jqxbulletchart', $properties);
     }
@@ -292,65 +246,6 @@ class renderer extends plugin_renderer_base {
             $properties->titlepadding = json_encode($properties->titlepadding);
         }
 
-        /*
-        $str = '';
-
-        $str .= '<center>';
-        $str .= '<div id="jqxBarChart'.$properties['id'].'"
-                      class="aplplot-jqbarchart"
-                      style="width:'.$properties['width'].'px; height:'.$properties['height'].'px"></div>'."\n";
-        $str .= '</center>';
-        $str .= '<script type="text/javascript">';
-
-        $str .= '$(document).ready(function () {
-            // prepare chart data
-            var graphdata'.$properties['id'].' = '.json_encode($data).';
-
-            // prepare jqxChart settings
-            var settings'.$properties['id'].' = {
-                title: "'.$name.'",
-                description: "'.$properties['desc'].'",
-                showLegend: true,
-                enableAnimations: true,
-                padding: '.$padding.',
-                titlePadding: '.$titlepadding.',
-                source: graphdata'.$properties['id'].',
-                xAxis:
-                {
-                    dataField: \''.$xaxis.'\',
-                    gridLines: { visible: true },
-                    flip: '.$properties['xflip'].',
-                    labels: {
-                        visible: true,
-                        angle:90
-                    }
-                },
-                valueAxis:
-                {
-                    flip: '.$properties['yflip'].',
-                    labels: {
-                        visible: true,
-                        angle:90
-                    }
-                },
-                colorScheme: \'scheme01\',
-                seriesGroups:
-                    [
-                        {
-                            type: \'column\',
-                            orientation: \''.$properties['direction'].'\',
-                            columnsGapPercent: 50,
-                            toolTipFormatSettings: { thousandsSeparator: \',\' },
-                            series: '.$seriesarr.'
-                        }
-                    ]
-            };
-            // setup the chart
-            $(\'#jqxBarChart'.$properties['id'].'\').jqxChart(settings'.$properties['id'].');
-        });';
-        $str .= '</script>';
-        */
-
         return $this->output->render_from_template('local_aplplot/jqxbarchart', $properties);
     }
 
@@ -378,35 +273,33 @@ class renderer extends plugin_renderer_base {
         return $this->output->render_from_template('local_aplplot/jqxswitchbutton', $properties);
     }
 
-    // Réimplement a wider version of chartjs.
-
     /**
-     * Renders a bar chart.
+     * Renders a extended bar chart.
      *
-     * @param \core\chart_bar $chart The chart.
+     * @param chart_bar $chart The chart.
      * @return string.
      */
-    public function render_chart_bar(\local_aplplot\chart_bar $chart) {
+    public function render_chart_bar(chart_bar $chart) {
         return $this->render_chart($chart);
     }
 
     /**
-     * Renders a line chart.
+     * Renders a extended line chart.
      *
-     * @param \core\chart_line $chart The chart.
+     * @param chart_line $chart The chart.
      * @return string.
      */
-    public function render_chart_line(\local_aplplot\chart_line $chart) {
+    public function render_chart_line(chart_line $chart) {
         return $this->render_chart($chart);
     }
 
     /**
-     * Renders a pie chart.
+     * Renders a extended pie chart.
      *
-     * @param \core\chart_pie $chart The chart.
+     * @param chart_pie $chart The chart.
      * @return string.
      */
-    public function render_chart_pie(\local_aplplot\chart_pie $chart) {
+    public function render_chart_pie(chart_pie $chart) {
         return $this->render_chart($chart);
     }
 
@@ -417,6 +310,7 @@ class renderer extends plugin_renderer_base {
      * @param \core\chart_base $chart The chart.
      * @param bool $withtable Whether to include a data table with the chart.
      * @return string.
+     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
      */
     public function render_chart(\core\chart_base $chart, $withtable = true) {
 

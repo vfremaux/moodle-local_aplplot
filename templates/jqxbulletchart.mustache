@@ -1,9 +1,44 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
 
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
 
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
 
-<!-- local_vflibs/jqxbulletchart -->
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template local_aplplot/jqxbulletart
+    @todo unify variable names with other jq templates
+
+    Bar Chart rendering utility template with predefined options.
+
+    Example context (json):
+    {
+        "id": "564567656",
+        "width": "450",
+        "height": "350",
+        "desc": "",
+        "name": "A bar graph",
+        "barsize": "20",
+        "datalist": "{}",
+        "titlepadding": "",
+        "seriesarr": "{}",
+        "pointer": "{"size": "10%", "color": "#000000", "opacity": "100", "value":"50", "label": "Pointer"}"
+    }
+}}
+<!-- local_aplplot/jqxbulletchart has_js -->
 <div id="jqxBulletChart{{id}}" class="jqwidgets-bulletchart"></div>
-<script type="text/javascript">
+<!-- /local_aplplot/jqxbulletchart -->
+
+{{#js}}
 $(document).ready(function () {
     $("#jqxBulletChart{{id}}").jqxBulletChart({
         width: "{{width}}",
@@ -22,7 +57,7 @@ $(document).ready(function () {
         ],
 
         {{#pointer}}
-        'pointer: {
+        pointer: {
             value: {{value}},
             label: "{{label}}",
             size: "{{size}}%",
@@ -34,7 +69,7 @@ $(document).ready(function () {
         target: {
             value: {{value}},
             label: "{{label}}",
-            size: {{size}},
+            size: {{size}}%,
             color: "{{color}}"
         },
         {{/target}}
@@ -51,5 +86,4 @@ $(document).ready(function () {
         showTooltip: {{tooltip}}
     });
 });
-</script>
-<!-- /local_vflibs/jqxbulletchart -->
+{{/js}}

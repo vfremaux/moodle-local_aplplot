@@ -25,6 +25,11 @@
  */
 namespace local_aplplot;
 
+// Abusive PSR12 rule : adds useless spaces in string concatenation.
+// phpcs:disable PSR12.Operators.OperatorSpacing.NoSpaceBefore
+// phpcs:disable PSR12.Operators.OperatorSpacing.NoSpaceAfter
+// phpcs:disable PSR12.Classes.OpeningBraceSpace.Found
+
 use stdClass;
 
 /**
@@ -78,8 +83,14 @@ class googlemaps {
      * @param int $height in pixels
      * @param array $options
      */
-    public static function print_graph($htmlid, $lat, $lng, $width = 400, $height = 350,
-            $options = []) {
+    public static function print_graph(
+        $htmlid,
+        $lat,
+        $lng,
+        $width = 400,
+        $height = 350,
+        $options = []
+    ) {
         global $googlemaps;
 
         if (!isset($googlemaps)) {
@@ -144,7 +155,7 @@ class googlemaps {
         // Remove quotes provided by php jsonisation.
         $optionsstr = str_replace('"latlng"', 'latlng', $optionsstr);
 
-        $template = new StdClass;
+        $template = new StdClass();
         $template->htmlid = $htmlid;
         $template->courseid = $COURSE->id;
         $template->lat = $lat;
@@ -154,7 +165,7 @@ class googlemaps {
         $template->optionsstr = $optionsstr;
 
         foreach ($data as $d) {
-            $markertpl = new stdClass;
+            $markertpl = new StdClass();
             $markertpl->data = json_encode($d);
             $template->markers[] = $markertpl;
         }
