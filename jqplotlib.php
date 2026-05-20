@@ -143,7 +143,7 @@ class jqplot {
         $addstyle = '',
         $return = false,
         $ticks = null
-        ) {
+    ) {
 
         global $plotid;
         global $OUTPUT;
