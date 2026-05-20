@@ -27,7 +27,7 @@ define(['jquery'], function($) {
         init: function() {
             $.jqplot.config.enablePlugins = true;
         }
-    }
+    };
 
     return jqplotcommon;
 
