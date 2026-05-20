@@ -52,6 +52,8 @@
 <title>GoogleMap</title>
 <meta name="viewport" content="initial-scale=1.0">
 </head>
+<body onload="initialize()">
+
 <style>
   html { height: 100% }
   body { height: 100%; margin: 0; padding: 0 }
@@ -143,8 +145,6 @@
             { saturation: 70 }]
     }];
 </script>
-</head>
-<body onload="initialize()">
 {{^googleapikey}}
 {{#str}}missinggooglekey, local_aplplot{{/str}}
 {{/googleapikey}}
