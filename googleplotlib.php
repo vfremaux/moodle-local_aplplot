@@ -48,7 +48,7 @@ class googlemaps {
      * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
      */
     public static function require_js($sensor = 'false') {
-        echo "<script type=\"text/javascript\" src=\"http://maps.googleapis.com/maps/api/js?sensor=$sensor\"></script>\n";
+        echo "<script src=\"http://maps.googleapis.com/maps/api/js?sensor=$sensor\"></script>\n";
     }
 
     /**
@@ -187,9 +187,9 @@ class googlemaps {
      * @param string $address
      * @param string $postalcode
      * @param string $city
-     * @param arrayref &$errors filled with google errors
+     * @param arrayref $errors filled with google errors
      */
-    public static function get_geolocation($region, $address, $postalcode, $city, &$errors) {
+    public static function get_geolocation($region, $address, $postalcode, $city, & $errors) {
 
         $config = get_config('local_aplplot');
 

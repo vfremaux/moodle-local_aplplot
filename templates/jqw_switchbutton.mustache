@@ -15,33 +15,40 @@
     along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 }}
 {{!
-    @template local_aplplot/jqxprogressbar
+    @template local_aplplot/jqxswitchbutton
     @todo unify variable names with other jq templates
 
-    Bar Chart rendering utility template with predefined options.
+    A switch buttons with 2 states using JQuery Widgets.
 
     Example context (json):
     {
-        "name": "Progress"
-        "value": "80%",
+        "name": "myswitch",
         "width": "450px",
-        "height": "24px",
-        "template": "",
-        "animation": "5"
+        "height": "80px",
+        "initial": "0",
+        "onchecked": "",
+        "onunchecked": ""
     }
 }}
 
-<!-- local_aplcore/jqxprogressbar -->
-<div style="margin-top: 10px; overflow: hidden;" id="{{name}}" title="{{#str}}completionpercent, local_aplcore, {{value}} {{/str}}"></div>
-<!-- /local_aplcore/jqxprogressbar -->
+<!-- local_aplplot/jqw_switchbutton -->
+<div id="{{name}}"></div>
+<!-- /local_aplplot/jqw_switchbutton -->
+
 {{#js}}
 $(document).ready(function () {
-    $("#{{name}}").jqxProgressBar({
-        width: "{{width}}",
-        height: "{{height}}",
-        value: {{value}},
-        template: '{{template}}',
-        animationDuration: {{animation}}
+    $('#{{name}}').jqxSwitchButton({
+        height: {{height}},
+        width: {{width}},
+        checked: {{initial}}
+    });
+
+    $('#{{name}}').on('checked', function(event) {
+        {{onchecked}}
+    });
+
+    $('#{{name}}').on('unchecked', function (event) {
+        {{onunchecked}}
     });
 });
 {{/js}}

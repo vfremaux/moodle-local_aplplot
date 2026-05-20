@@ -134,16 +134,7 @@ class timeline {
         $colorkeys = preg_split("/\r?\n/", $theblock->config->timelinecolorkeys);
         $theblock->normalize($colorkeys, $colors);
         $colouring = array_combine($colorkeys, $colors);
-        if (!function_exists('mytrim')) {
-            /**
-             * Embdded function.
-             * @param array &$data
-             */
-            function mytrim(&$data) {
-                $data = trim($data);
-            }
-        }
-        array_walk($colorkeys, 'mytrim');
+        $colorkeys = array_map('trim', $colorkeys);
 
         foreach ($data as $d) {
             $eventattrs = [];

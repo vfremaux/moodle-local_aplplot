@@ -123,9 +123,9 @@ class jqplot {
     }
 
     /**
-     * prints any JQplot graph type given a php descriptor and dataset.
+     * Prints any JQplot graph type given a php descriptor and dataset.
      * @param string $htmlid unique HTML id for the graph
-     * @param object $graph 
+     * @param object $graph
      * @param array $data
      * @param int $width graph's width
      * @param int $height graph's height
@@ -134,8 +134,16 @@ class jqplot {
      * @param array $ticks additional defs for axis ticks
      * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
      */
-    public static function print_graph($htmlid, $graph, $data, $width = 800, $height = 600,
-            $addstyle = '', $return = false, $ticks = null) {
+    public static function print_graph(
+            $htmlid,
+            $graph,
+            $data,
+            $width = 800,
+            $height = 600,
+            $addstyle = '',
+            $return = false,
+            $ticks = null) {
+
         global $plotid;
         global $OUTPUT;
         static $instance = 0;
@@ -164,7 +172,7 @@ class jqplot {
 
         $plotid++;
 
-        $str = $OUTPUT->render_from_template('local_aplplot/jqxgraph', $template);
+        $str = $OUTPUT->render_from_template('local_aplplot/jqp_graph', $template);
 
         if ($return) {
             return $str;
@@ -176,12 +184,12 @@ class jqplot {
      * Prints a bidimensional graph (map)
      * Defaults to a percent graph 100 x 100.
      * @param string $htmlid unique HTML id for the graph
-     * @param arrayref &$data data to print in graph
+     * @param arrayref $data data to print in graph
      * @param string $title title for the graph
      * @param array $options options
      * @used-by local_advancedperfs
      */
-    public static function print_labelled_graph($htmlid, &$data, $title, $options) {
+    public static function print_labelled_graph($htmlid, $data, $title, $options) {
         global $plotid;
         global $OUTPUT;
         static $instance = 0;
@@ -209,7 +217,7 @@ class jqplot {
 
         $plotid++;
 
-        return $OUTPUT->render_from_template('local_aplplot/jqxlabelledgraph', $template);
+        return $OUTPUT->render_from_template('local_aplplot/jqp_labelledgraph', $template);
     }
 
     /**
@@ -289,7 +297,7 @@ class jqplot {
         }
         $template->ticksdata = self::simplebarline('ticks'.$htmlid, $ticks);
 
-        return $OUTPUT->render_from_template('local_aplplot/jqxbargraph', $template);
+        return $OUTPUT->render_from_template('local_aplplot/jqp_bargraph', $template);
     }
 
     /**
@@ -348,13 +356,13 @@ class jqplot {
 
         $plotid++;
 
-        return $OUTPUT->render_from_template('local_aplplot/jqxtimecurve', $template);
+        return $OUTPUT->render_from_template('local_aplplot/jqp_timecurve', $template);
     }
 
     /**
      * Prints a donut from a simple serie of label => value data.
-     * @param $htmlid the unique graph html id
-     * @param $data
+     * @param string $htmlid the unique graph html id
+     * @param array $data
      * @param string $class
      * @param array $options
      * @used-by local_my
@@ -424,11 +432,12 @@ class jqplot {
         $template->customcolors = "'".implode("','", $colors)."'";
 
         $plotid++;
-        return $OUTPUT->render_from_template('local_aplplot/jqplotsimpledonut', $template);
+        return $OUTPUT->render_from_template('local_aplplot/jqp_simpledonut', $template);
     }
 
     /**
      * Generates a color in full, dark or light tones.
+     * @param string $tone
      */
     public static function generate_color($tone = 'full') {
         if ($tone == 'full') {
@@ -450,7 +459,8 @@ class jqplot {
 
     /**
      * fix many conversion issues from the standard php json_encode().
-     * $data must contain a simple associative array.
+     * @param array $data must contain a simple associative array.
+     * @return string
      */
     public static function json_encode_array($data) {
         $str = '[';

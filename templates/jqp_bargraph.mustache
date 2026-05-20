@@ -36,16 +36,12 @@
         "ticksdata": ""
     }
 }}
-<!-- local_aplplot/bargraph -->
-<center>
-<div id="{{htmlid}}"
-     class="aplplot-jqhgraph"
-     style="width:{{options.width}}px; height:{{options.height}}px;">
-</div>
-</center>
+<!-- local_aplplot/jqp_bargraph -->
+<div id="{{htmlid}}" class="aplplot-jqp-bargraph" style="width:{{width}}px; height:{{height}}px;margin-left:auto;margin-right:auto"></div>
+<!-- /local_aplplot/jqp_bargraph -->
 
-<script type="text/javascript" language="javascript">
-    $.jqplot.config.enablePlugins = true;
+{{#js}}
+$(document).ready(function () {
 
     {{{graphdata}}}
 
@@ -58,20 +54,20 @@
             legend: {
                 show: true,
                 location: 'e',
-                placement: 'outsideGrid'},
+                placement: 'outsideGrid',
                 title: '{{title}}'
             },
-            seriesDefaults:{
-                renderer:$.jqplot.BarRenderer,
-                rendererOptions:{
-                    barDirection:'{{options.direction}}',
+            seriesDefaults: {
+                renderer: $.jqplot.BarRenderer,
+                rendererOptions: {
+                    barDirection: '{{direction}}',
                     barPadding: 6,
-                    barMargin:15
+                    barMargin: 15
                 },
-                shadowAngle:135
+                shadowAngle: 135
             },
             series:[{
-                label:'{{options.seriename}}'
+                label:'{{seriename}}'
             }],
             highlighter: {
                 show: false,
@@ -82,19 +78,19 @@
             },
             axes:{
                 xaxis:{
-                    label:'{{options.xlabel}}',
-                    min:{{options.xmin}},
-                    max:{{options.xmax'}},
-                    tickOptions:{
-                        formatString:'%d {{options.xunit}}'
+                    label: '{{xlabel}}',
+                    min: {{xmin}},
+                    max: {{xmax'}},
+                    tickOptions: {
+                        formatString: '%d {{xunit}}'
                     }
                 },
-                yaxis:{
-                    renderer:$.jqplot.CategoryAxisRenderer,
+                yaxis: {
+                    renderer: $.jqplot.CategoryAxisRenderer,
                     ticks: ticks{{htmlid}}
                 }
             }
         }
     );
-</script>
-<!-- /local_aplplot/bargraph -->
+});
+{{/js}}

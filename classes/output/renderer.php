@@ -80,7 +80,7 @@ class renderer extends plugin_renderer_base {
         $properties->l = round(($properties->cropwidth - $properties->width) / 2);
         $properties->t = round(($properties->cropheight - $properties->height) / 2);
 
-        return $this->output->render_from_template('local_aplplot/jqxsimplegauge', $properties);
+        return $this->output->render_from_template('local_aplplot/jqw_simplegauge', $properties);
     }
 
     /**
@@ -109,7 +109,7 @@ class renderer extends plugin_renderer_base {
         $properties->value = $value;
         $properties->name = $name;
 
-        return $this->output->render_from_template('local_aplplot/jqxprogressbar', $properties);
+        return $this->output->render_from_template('local_aplplot/jqw_progressbar', $properties);
     }
 
     /**
@@ -186,7 +186,7 @@ class renderer extends plugin_renderer_base {
             $properties->tooltip = 'true';
         }
 
-        return $this->output->render_from_template('local_aplplot/jqxbulletchart', $properties);
+        return $this->output->render_from_template('local_aplplot/jqw_bulletchart', $properties);
     }
 
     /**
@@ -246,7 +246,7 @@ class renderer extends plugin_renderer_base {
             $properties->titlepadding = json_encode($properties->titlepadding);
         }
 
-        return $this->output->render_from_template('local_aplplot/jqxbarchart', $properties);
+        return $this->output->render_from_template('local_aplplot/jqw_barchart', $properties);
     }
 
     /**
@@ -270,7 +270,7 @@ class renderer extends plugin_renderer_base {
             $properties->height = 30;
         }
 
-        return $this->output->render_from_template('local_aplplot/jqxswitchbutton', $properties);
+        return $this->output->render_from_template('local_aplplot/jqw_switchbutton', $properties);
     }
 
     /**
@@ -294,10 +294,11 @@ class renderer extends plugin_renderer_base {
     }
 
     /**
-     * Renders a extended pie chart.
+     * Renders a extended pie chart with better color control.
      *
      * @param chart_pie $chart The chart.
      * @return string.
+     * @used-by customlabeltype_satisfaction
      */
     public function render_chart_pie(chart_pie $chart) {
         return $this->render_chart($chart);
@@ -318,7 +319,7 @@ class renderer extends plugin_renderer_base {
 
         $chartdata = json_encode($chart);
 
-        return $this->output->render_from_template('local_aplplot/chart', (object) [
+        return $this->output->render_from_template('local_aplplot/chartjsplus_chart', (object) [
             'localuniqid' => $localuniqid,
             'chartdata' => $chartdata,
             'withtable' => $withtable,

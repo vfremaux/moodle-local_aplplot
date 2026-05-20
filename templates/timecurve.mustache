@@ -1,0 +1,91 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template local_aplplot/timecurve
+    @todo add parametric width and height
+
+    Bar Chart rendering utility template with predefined options.
+
+    Example context (json):
+    {
+        "htmlid": "564567656",
+        "plotid": "1",
+        "desc": "",
+        "title": "A timeline graph",
+        "curvedata": "{}",
+        "varsetlist": "",
+        "xlabel": "",
+        "seriesdata": "{}"
+    }
+}}
+<!-- local_aplplot/timecurve -->
+<center>
+<div id="timeBars{{htmlid}}"
+    class="aplplot-jqtimebars"
+    style="width:800px; height:350px;"></div>
+</center>
+
+<script type="text/javascript">
+
+    {{{curvedata}}}
+
+    $.jqplot.config.enablePlugins = true;
+
+    plot{{plotid}} = $.jqplot(
+        'timeBars{{htmlid}}',
+        [{{{varsetlist}}}],
+        {
+            title: '{{title}}',
+            seriesDefaults:{
+                renderer:$.jqplot.BarRenderer,
+                rendererOptions:{
+                    barDirection:'vertical',
+                    barWidth: 10,
+                    barPadding: 6,
+                    barMargin:15
+                },
+                shadowAngle:135
+            },
+            cursor: {
+                show: false
+            },
+            axes: {
+                xaxis: {
+                    renderer: $.jqplot.DateAxisRenderer,
+                    tickRenderer: $.jqplot.CanvasAxisTickRenderer,
+                    tickOptions:{
+                        formatString:'%d/%m/%y',
+                        angle: -45,
+                        fontSize: '8pt'
+                    },
+                    tickInterval:'1 week'
+                },
+                yaxis: {
+                    autoscale:true,
+                    tickOptions:{
+                        formatString:'%d'
+                    },
+                    label:'{{options.ylabel}}'
+                }
+            },
+            series:[
+                {{{seriesdata}}}
+            ]
+        }
+    );
+</script>
+<!-- /local_aplplot/timecurve -->

@@ -15,14 +15,14 @@
     along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 }}
 {{!
-    @template local_aplplot/jqxprogressbar
+    @template local_aplplot/jqwprogressbar
     @todo unify variable names with other jq templates
 
-    Bar Chart rendering utility template with predefined options.
+    Bar Chart rendering utility template with predefined options using JQWidgets
 
     Example context (json):
     {
-        "name": "Progress"
+        "name": "Progress",
         "value": "80%",
         "width": "450px",
         "height": "24px",
@@ -31,9 +31,9 @@
     }
 }}
 
-<!-- local_aplcore/jqxprogressbar -->
+<!-- local_aplcore/jqw_progressbar -->
 <div style="margin-top: 10px; overflow: hidden;" id="{{name}}" title="{{#str}}completionpercent, local_aplcore, {{value}} {{/str}}"></div>
-<!-- /local_aplcore/jqxprogressbar -->
+<!-- /local_aplcore/jqw_progressbar -->
 {{#js}}
 $(document).ready(function () {
     $("#{{name}}").jqxProgressBar({
