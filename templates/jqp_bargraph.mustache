@@ -1,0 +1,95 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template local_aplplot/chart
+
+    Chart rendering.
+
+    Example context (json):
+    {
+        "htmlid": "2134234",
+        "width":"800",
+        "height": "450",
+        "direction": "horiz",
+        "xmax": 100,
+        "xmin": 0,
+        "xlabel": "Quantity",
+        "xunit": "",
+        "seriename": "Some Data",
+        "title": "Graph title",
+        "graphdata": "",
+        "ticksdata": ""
+    }
+}}
+<!-- local_aplplot/jqp_bargraph -->
+<div id="{{htmlid}}" class="aplplot-jqp-bargraph" style="width:{{width}}px; height:{{height}}px;margin-left:auto;margin-right:auto"></div>
+<!-- /local_aplplot/jqp_bargraph -->
+
+{{#js}}
+$(document).ready(function () {
+
+    {{{graphdata}}}
+
+    {{{ticksdata}}}
+
+    plot{{plotid}} = $.jqplot(
+        '{{htmlid}}',
+        [graphdata],
+        {
+            legend: {
+                show: true,
+                location: 'e',
+                placement: 'outsideGrid',
+                title: '{{title}}'
+            },
+            seriesDefaults: {
+                renderer: $.jqplot.BarRenderer,
+                rendererOptions: {
+                    barDirection: '{{direction}}',
+                    barPadding: 6,
+                    barMargin: 15
+                },
+                shadowAngle: 135
+            },
+            series:[{
+                label:'{{seriename}}'
+            }],
+            highlighter: {
+                show: false,
+            },
+            axesDefaults:{
+                useSeriesColor: false,
+                syncTicks: true
+            },
+            axes:{
+                xaxis:{
+                    label: '{{xlabel}}',
+                    min: {{xmin}},
+                    max: {{xmax'}},
+                    tickOptions: {
+                        formatString: '%d {{xunit}}'
+                    }
+                },
+                yaxis: {
+                    renderer: $.jqplot.CategoryAxisRenderer,
+                    ticks: ticks{{htmlid}}
+                }
+            }
+        }
+    );
+});
+{{/js}}

@@ -25,6 +25,13 @@
 namespace local_aplplot;
 
 // phpcs:disable moodle.Commenting.ValidTags.Invalid
+<<<<<<< HEAD:timelinelib.php
+=======
+// Abusive PSR12 rule : adds useless spaces in string concatenation.
+// phpcs:disable PSR12.Operators.OperatorSpacing.NoSpaceBefore
+// phpcs:disable PSR12.Operators.OperatorSpacing.NoSpaceAfter
+// phpcs:disable PSR12.Classes.OpeningBraceSpace.Found
+>>>>>>> MOODLE_501_STABLE:classes/timeline.php
 
 use context_block;
 use stdClass;
@@ -54,6 +61,7 @@ class timeline {
     }
 
     /**
+<<<<<<< HEAD:timelinelib.php
      * Initialize a timeline
      * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
      */
@@ -77,10 +85,26 @@ class timeline {
             // document.body.onload = timeline_initialize_all;
             timeline_initialize_all();
         </script>\n";
+=======
+     * Print a timeline graph
+     * @param object $theblock the block calling block instance
+     * @param string $htmlid
+     * @param int $width
+     * @param int $height
+     * @param array $data
+     * @param bool $return
+     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
+     */
+    public static function print_graph($theblock, $htmlid, $width, $height, $data, $return = false) {
+        global $timelinegraphs, $USER, $OUTPUT;
+>>>>>>> MOODLE_501_STABLE:classes/timeline.php
 
-        if ($return) {
-            return $str;
+        if (!isset($theblock->config->upperbandunit)) {
+            $msg = "This library is used from an incompatible block. There should be some ";
+            $msg .= "timeline configuration in the block instance's config to play.";
+            throw new coding_exception($msg);
         }
+<<<<<<< HEAD:timelinelib.php
         echo $str;
     }
 
@@ -102,6 +126,8 @@ class timeline {
             $msg .= "timeline configuration in the block instance's config to play.";
             throw new coding_exception($msg);
         }
+=======
+>>>>>>> MOODLE_501_STABLE:classes/timeline.php
 
         if (!isset($timelinegraphs)) {
             $timelinegraphs = [];
@@ -110,7 +136,11 @@ class timeline {
         // Generate data on a tmp file.
         self::generate_xml($theblock, $htmlid, $data);
 
+<<<<<<< HEAD:timelinelib.php
         $template = new StdClass;
+=======
+        $template = new StdClass();
+>>>>>>> MOODLE_501_STABLE:classes/timeline.php
         $template->htmlid = $htmlid;
         $template->width = $width;
         $template->height = $height;
@@ -119,8 +149,20 @@ class timeline {
         $template->lowerbandunit = $theblock->config->lowerbandunit;
         $filename = $htmlid.'_'.$USER->id.'.xml';
         $blockcontext = context_block::instance($theblock->instance->id);
+<<<<<<< HEAD:timelinelib.php
         $template->xmlurl = moodle_url::make_pluginfile_url($blockcontext->id, 'block_'.$theblock->blockname,
                 'timelineevents', $theblock->instance->id, '/', $filename, true);
+=======
+        $template->xmlurl = moodle_url::make_pluginfile_url(
+            $blockcontext->id,
+            'block_'.$theblock->blockname,
+            'timelineevents',
+            $theblock->instance->id,
+            '/',
+            $filename,
+            true
+        );
+>>>>>>> MOODLE_501_STABLE:classes/timeline.php
         $template->xmlurl .= '&unique='.uniqid(); // Avoid caching.
 
         $timelinegraphs[] = $htmlid;
@@ -154,6 +196,7 @@ class timeline {
         $colorkeys = preg_split("/\r?\n/", $theblock->config->timelinecolorkeys);
         $theblock->normalize($colorkeys, $colors);
         $colouring = array_combine($colorkeys, $colors);
+<<<<<<< HEAD:timelinelib.php
         if (!function_exists('mytrim')) {
             /**
              * Embdded function.
@@ -164,36 +207,56 @@ class timeline {
             }
         }
         array_walk($colorkeys, 'mytrim');
+=======
+        $colorkeys = array_map('trim', $colorkeys);
+>>>>>>> MOODLE_501_STABLE:classes/timeline.php
 
         foreach ($data as $d) {
             $eventattrs = [];
             if (empty($d)) {
                 continue;
             }
-            if (!empty($theblock->config->timelineeventstart) &&
-                    !empty($d->{$theblock->config->timelineeventstart})) {
+            if (
+                !empty($theblock->config->timelineeventstart) &&
+                    !empty($d->{$theblock->config->timelineeventstart})
+            ) {
                 $eventattrs[] = "start=\"".timeline_date_convert($d->{$theblock->config->timelineeventstart}, $theblock)."\"";
             }
-            if (!empty($theblock->config->timelineeventend) &&
+            if (
+                !empty($theblock->config->timelineeventend) &&
                     !empty($d->{$theblock->config->timelineeventend}) &&
-                            $d->{$theblock->config->timelineeventend} != "1 Jan 1970 01:00:00 GMT") {
+                            $d->{$theblock->config->timelineeventend} != "1 Jan 1970 01:00:00 GMT"
+            ) {
                 $eventattrs[] = "end=\"".timeline_date_convert($d->{$theblock->config->timelineeventend}, $theblock)."\"";
             }
-            if (!empty($theblock->config->timelineeventend) &&
+            if (
+                !empty($theblock->config->timelineeventend) &&
                     !empty($d->{$theblock->config->timelineeventend}) &&
-                            $d->{$theblock->config->timelineeventend} != "1 Jan 1970 01:00:00 GMT") {
+                            $d->{$theblock->config->timelineeventend} != "1 Jan 1970 01:00:00 GMT"
+            ) {
                 $eventattrs[] = "isDuration=\"true\"";
             }
-            if (!empty($theblock->config->timelineeventtitle) &&
-                    !empty($d->{$theblock->config->timelineeventtitle})) {
+            if (
+                !empty($theblock->config->timelineeventtitle) &&
+                    !empty($d->{$theblock->config->timelineeventtitle})
+            ) {
                 $eventattrs[] = "title=\"".str_replace('&', '&amp;', $d->{$theblock->config->timelineeventtitle})."\"";
             }
-            if (!empty($theblock->config->timelineeventlink) &&
-                    !empty($d->{$theblock->config->timelineeventlink})) {
+            if (
+                !empty($theblock->config->timelineeventlink) &&
+                    !empty($d->{$theblock->config->timelineeventlink})
+            ) {
                 $eventattrs[] = "link=\"".$d->{$theblock->config->timelineeventlink}."\"";
             }
+<<<<<<< HEAD:timelinelib.php
             if (!empty($theblock->config->timelinecolorfield) &&
                     !empty($d->{$theblock->config->timelinecolorfield})) {
+=======
+            if (
+                !empty($theblock->config->timelinecolorfield) &&
+                    !empty($d->{$theblock->config->timelinecolorfield})
+            ) {
+>>>>>>> MOODLE_501_STABLE:classes/timeline.php
                 if (array_key_exists($d->{$theblock->config->timelinecolorfield}, $colouring)) {
                     $eventattrs[] = "color=\"".$colouring[$d->{$theblock->config->timelinecolorfield}]."\"";
                 }
@@ -207,7 +270,7 @@ class timeline {
         }
         $tmp .= "</data>\n";
 
-        $filerec = new StdClass;
+        $filerec = new StdClass();
         $blockcontext = context_block::instance($theblock->instance->id);
         $filerec->contextid = $blockcontext->id;
         $filerec->component = 'block_'.$theblock->instance->blockname;

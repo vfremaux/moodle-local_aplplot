@@ -1,0 +1,50 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template local_aplplot/jqxgraph
+
+    A Generic graph.
+
+    Example context (json):
+    {
+        "htmlid": "453215",
+        "plotid": "1",
+        "width": 800,
+        "height": 450,
+        "addstyle": "",
+        "hasticks": true,
+        "ticksvalues": "1,2,3,4,5",
+        "varsetlist": ""
+    }
+}}
+<!-- local_aplplot/jqp_graph has_js-->
+<div id="{{htmlid}}" style="{{{addstyle}}};width:{{width}}px;height:{{height}}px;margin-left:auto;margin-right:auto"></div>
+<!-- /local_aplplot/jqp_graph has_js-->
+{{#js}}
+$(document).ready(function () {
+
+    {{#hasticks}}
+    var ticks = [{{ticksvalues}}];
+    {{/hasticks}}
+
+    plot{{plotid}} = $.jqplot(
+        '{{htmlid}}',
+        {{{varsetlist}}},
+        {{{jsongraph}}}
+    );
+});
+{{/js}}

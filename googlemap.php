@@ -15,14 +15,24 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+<<<<<<< HEAD
  * GoogleMap iframe wrapper.
+=======
+ * GoogleMap iframe wrapper
+>>>>>>> MOODLE_501_STABLE
  *
  * @package     local_aplplot
  * @author      Valery Fremaux <valery.fremaux@gmail.com>
  * @copyright   2015 Valery Fremaux (www.activeprolearn.com)
  * @license     https://www.gnu.org/copyleft/gpl.html GNU Public License
  */
+
 require('../../config.php');
+
+// Abusive PSR12 rule : adds useless spaces in string concatenation.
+// phpcs:disable PSR12.Operators.OperatorSpacing.NoSpaceBefore
+// phpcs:disable PSR12.Operators.OperatorSpacing.NoSpaceAfter
+// phpcs:disable PSR12.Classes.OpeningBraceSpace.Found
 
 $systemcontext = context_system::instance();
 
@@ -35,13 +45,23 @@ $id = required_param('mapid', PARAM_TEXT);
 $mapid = 'map_'.$id;
 $markers = optional_param_array('markers', [], PARAM_TEXT); // Array of markers.
 
-$params = ['lat' => $lat, 'lng' => $lng, 'options' => $options, 'mapid' => $id];
+$params = [
+    'lat' => $lat,
+    'lng' => $lng,
+    'options' => $options,
+    'mapid' => $id,
+];
 $url = new moodle_url('/local/aplplot/googlemap.php', $params);
 $PAGE->set_context($systemcontext);
 
 require_login();
 
+<<<<<<< HEAD
 $template = new StdClass;
+=======
+$template = new StdClass();
+$template->lang = current_language();
+>>>>>>> MOODLE_501_STABLE
 $template->lat = $lat;
 $template->lng = $lng;
 $template->googlepikey = $config->googlemapsapikey;
@@ -58,27 +78,27 @@ $hasshadow = [];
 
 if (!empty($markerimages)) {
     foreach ($markerimages as $imfile) {
-
         $sizeinfo = $imfile->get_imageinfo();
 
         $imname = $imfile->get_filename();
         if (strpos('mk_', $imname) === 0) {
-            $markerimagetpl = new StdClass;
+            $markerimagetpl = new StdClass();
             $markerimagetpl->classname = str_replace('mk_', '', $imname);
             $markerimagetpl->imfullpath = moodle_url::make_plugin_file(
                 $systemcontext->id,
-                'local_vflibs',
+                'local_aplplot',
                 'googlemarks',
                 0,
                 $imfile->get_filepath(),
-                $imfile->get_filename());
+                $imfile->get_filename()
+            );
             if (!empty($sizeinfo)) {
                 $markerimagetpl->sizeinfo0 = $sizeinfo['width'];
                 $markerimagetpl->sizeinfo1 = $sizeinfo['height'];
             }
             $template->markerimages[] = $markerimagetpl;
         } else {
-            $shadowimagetpl = new StdClass;
+            $shadowimagetpl = new StdClass();
             $shadowimagetpl->classname = str_replace('sh_', '', $imname);
             $shadowimagetpl->imfullpath = moodle_url::make_plugin_file(
                 $systemcontext->id,
@@ -86,7 +106,8 @@ if (!empty($markerimages)) {
                 'googlemarks',
                 0,
                 $imfile->get_filepath(),
-                $imfile->get_filename());
+                $imfile->get_filename()
+            );
             if (!empty($sizeinfo)) {
                 $shadowimagetpl->sizeinfo0 = $sizeinfo['width'];
                 $shadowimagetpl->sizeinfo1 = $sizeinfo['height'];

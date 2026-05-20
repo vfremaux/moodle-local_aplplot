@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
 
 <!-- local_aplplot -->
@@ -7,6 +8,47 @@
 
 <script type="text/javascript">
     var tl;
+=======
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template local_aplplot/timeline
+
+    timeline rendering utility template with predefined options.
+
+    Example context (json):
+    {
+        "htmlid": "564567656",
+        "width": "450",
+        "height": "350",
+        "showlowerband": false,
+        "lowerbandunit": "",
+        "upperbandunit": "",
+        "xmlurl": "<url to data>"
+    }
+}}
+<!-- local_aplplot/timeline -->
+<div id="timeline_{{htmlid}}" style="height:{{height}}px;width:{{width}}px;border: 1px solid #aaa"></div>
+<!-- /local_aplplot/timeline -->
+
+{{#js}}
+$(document).ready(function () {
+    var tl{{htmlid}};
+>>>>>>> MOODLE_501_STABLE
     function timeline_initialize_{{htmlid}}() {
 
        // create bands
@@ -15,7 +57,11 @@
             Timeline.createBandInfo({
                  eventSource:    eventSource,
                  width:          \"70%\",
+<<<<<<< HEAD
                  intervalUnit:   Timeline.DateTime.{$theblock->config->upperbandunit},
+=======
+                 intervalUnit:   Timeline.DateTime.{{upperbandunit}},
+>>>>>>> MOODLE_501_STABLE
                  intervalPixels: 100
             }),
 
@@ -35,8 +81,15 @@
         bandInfos[1].highlight = true;
         {{/showlowerband}}
 
+<<<<<<< HEAD
         tl = Timeline.create(document.getElementById("timeline_{{htmlid}}"), bandInfos);
         Timeline.loadXML("{{{xmlurl}}}", function(xml, url) { eventSource.loadXML(xml, url); });
+=======
+        tl{{htmlid}} = Timeline.create(document.getElementById("timeline_{{htmlid}}"), bandInfos);
+        Timeline.loadXML("{{{xmlurl}}}", function(xml, url) {
+            eventSource.loadXML(xml, url);
+        });
+>>>>>>> MOODLE_501_STABLE
     }
 
     var resizeTimerID = null;
@@ -44,6 +97,7 @@
         if (resizeTimerID == null) {
             resizeTimerID = window.setTimeout(function() {
                 resizeTimerID = null;
+<<<<<<< HEAD
                 tl.layout();
             }, 500);
         }
@@ -51,3 +105,14 @@
 </script>
 
 <!-- /local_aplplot -->
+=======
+                tl{{htmlid}}.layout();
+            }, 500);
+        }
+    }
+
+    // Do initialize this timeline.
+    timeline_initialize_{{htmlid}}();
+});
+{{/js}}
+>>>>>>> MOODLE_501_STABLE

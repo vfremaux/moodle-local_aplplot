@@ -1,0 +1,50 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template local_aplcore/googlemapform
+
+    Example context (json):
+    {
+        "courseid": "2",
+        "htmlid": "453215",
+        "lat": "10.4534",
+        "lng": "23.2376",
+        "optionsstr": "",
+        "markerdata": [{"data":"data1"}],
+        "width": "480",
+        "height": "350"
+    }
+}}
+<!-- local_aplcore/googlemapform -->
+<form action="/local/vflibs/googlemap.php" name="framesend" method="POST" target="mapframe_{{htmlid}}">
+<input type="hidden" name="id" value="{{courseid}}">
+<input type="hidden" name="lat" value="{{lat}}">
+<input type="hidden" name="lng" value="{{lng}}">
+<input type="hidden" name="options" value="{{{optionsstr}}}">
+<input type="hidden" name="mapid" value="{{htmlid}}">
+{{#markerdata}}
+<input type="hidden" name="markers[]" value="{{data}}">
+{{/markerdata}}
+</form>
+
+<iframe id="{{htmlid}}"
+    name="mapframe_{{htmlid}}"
+    width="{{width}}"
+    height="{{height}}"
+    onload="document.forms['framesend'].submit()">
+</iframe>
+<!-- /local_aplcore/googlemapforms -->

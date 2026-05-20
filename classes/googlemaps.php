@@ -25,19 +25,41 @@
  */
 namespace local_aplplot;
 
+<<<<<<< HEAD:googleplotlib.php
+=======
+// phpcs:disable moodle.Commenting.ValidTags.Invalid
+// Abusive PSR12 rule : adds useless spaces in string concatenation.
+// phpcs:disable PSR12.Operators.OperatorSpacing.NoSpaceBefore
+// phpcs:disable PSR12.Operators.OperatorSpacing.NoSpaceAfter
+// phpcs:disable PSR12.Classes.OpeningBraceSpace.Found
+
+defined('MOODLE_INTERNAL') || die();
+
+require_once($CFG->libdir.'/filelib.php');
+
+>>>>>>> MOODLE_501_STABLE:classes/googlemaps.php
 use stdClass;
 
 /**
  * GoogleMaps wrapper class
+<<<<<<< HEAD:googleplotlib.php
+=======
+ * @used-by block_dashboard
+>>>>>>> MOODLE_501_STABLE:classes/googlemaps.php
  */
 class googlemaps {
 
     /**
      * Implements a google maps API V3 wrapper for Moodle
+<<<<<<< HEAD:googleplotlib.php
      * @param $sensor
+=======
+     * @param bool $sensor
+     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
+>>>>>>> MOODLE_501_STABLE:classes/googlemaps.php
      */
     public static function require_js($sensor = 'false') {
-        echo "<script type=\"text/javascript\" src=\"http://maps.googleapis.com/maps/api/js?sensor=$sensor\"></script>\n";
+        echo "<script src=\"http://maps.googleapis.com/maps/api/js?sensor=$sensor\"></script>\n";
     }
 
     /**
@@ -78,8 +100,19 @@ class googlemaps {
      * @param int $height in pixels
      * @param array $options
      */
+<<<<<<< HEAD:googleplotlib.php
     public static function print_graph($htmlid, $lat, $lng, $width = 400, $height = 350,
             $options = []) {
+=======
+    public static function print_graph(
+        $htmlid,
+        $lat,
+        $lng,
+        $width = 400,
+        $height = 350,
+        $options = []
+    ) {
+>>>>>>> MOODLE_501_STABLE:classes/googlemaps.php
         global $googlemaps;
 
         if (!isset($googlemaps)) {
@@ -144,7 +177,11 @@ class googlemaps {
         // Remove quotes provided by php jsonisation.
         $optionsstr = str_replace('"latlng"', 'latlng', $optionsstr);
 
+<<<<<<< HEAD:googleplotlib.php
         $template = new StdClass;
+=======
+        $template = new StdClass();
+>>>>>>> MOODLE_501_STABLE:classes/googlemaps.php
         $template->htmlid = $htmlid;
         $template->courseid = $COURSE->id;
         $template->lat = $lat;
@@ -154,27 +191,27 @@ class googlemaps {
         $template->optionsstr = $optionsstr;
 
         foreach ($data as $d) {
-            $markertpl = new stdClass;
+            $markertpl = new StdClass();
             $markertpl->data = json_encode($d);
             $template->markers[] = $markertpl;
         }
 
-        return $OUTPUT->render_from_template('local_vflibs/googlemapform', $template);
+        return $OUTPUT->render_from_template('local_aplplot/googlemapform', $template);
     }
 
     /**
-     * get exact static geolocation from a human readable address
+     * Get exact static geolocation from a human readable address
      * Note that google has changed its terms of service for all geographic data exploitation
      * and now needs a Google API key bound to a billing account.
      * @param string $region
      * @param string $address
      * @param string $postalcode
      * @param string $city
-     * @param arrayref &$errors filled with google errors
+     * @param arrayref $errors filled with google errors
      */
     public static function get_geolocation($region, $address, $postalcode, $city, &$errors) {
 
-        $config = get_config('local_vflibs');
+        $config = get_config('local_aplplot');
 
         $locationurlstring = 'region='.$region.'&address='.urlencode($address).','.urlencode($postalcode.' '.$city);
 
@@ -186,8 +223,9 @@ class googlemaps {
         $querystring = 'key='.$config->googlemapsapikey.'&'.$locationurlstring;
 
         // Initialize with the target URL.
-        $ch = curl_init($uri.'?'.$querystring);
+        $curl = new curl($options);
 
+<<<<<<< HEAD:googleplotlib.php
         curl_setopt($ch, CURLOPT_TIMEOUT, 300);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_POST, false);
@@ -196,11 +234,21 @@ class googlemaps {
         curl_setopt($ch, CURLOPT_HTTPHEADER, ["Content-Type: text/xml charset=UTF-8"]);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+=======
+        $curl->setopt('CURLOPT_TIMEOUT', 300);
+        $curl->setopt('CURLOPT_RETURNTRANSFER', true);
+        $curl->setopt('CURLOPT_POST', false);
+        $curl->setopt('CURLOPT_USERAGENT', 'Moodle Dashboards');
+        $curl->setopt('CURLOPT_POSTFIELDS', '');
+        $curl->setopt('CURLOPT_HTTPHEADER', ["Content-Type: text/xml charset=UTF-8"]);
+        $curl->setopt('CURLOPT_SSL_VERIFYPEER', false);
+        $curl->setopt('CURLOPT_SSL_VERIFYHOST', 0);
+>>>>>>> MOODLE_501_STABLE:classes/googlemaps.php
 
-        $rawresponse = curl_exec($ch);
+        $rawresponse = $curl->get($uri.'?'.$querystring);
 
         if ($rawresponse === false) {
-            $errors[] = curl_errno($ch) .':'. curl_error($ch);
+            $errors[] = $curl->get_errno() .':'. $curl->get_error($ch);
             return false;
         }
 

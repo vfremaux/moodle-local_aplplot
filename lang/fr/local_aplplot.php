@@ -30,5 +30,8 @@ $string['configjqplotshadows'] = 'Ombres des graphes JQPlot';
 $string['configjqplotshadows_desc'] = 'Si activé, ajouter un ombrage sur les générateurs jqplot.';
 $string['missinggooglekey'] = 'Vous n\'avez pas entré de clef d\'API Google. Voir la documentation https://developers.google.com/maps/documentation/javascript/get-api-key';
 $string['pluginname'] = 'Librairies de graphage pour les plugins APL';
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> MOODLE_501_STABLE
