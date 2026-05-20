@@ -135,14 +135,15 @@ class jqplot {
      * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
      */
     public static function print_graph(
-            $htmlid,
-            $graph,
-            $data,
-            $width = 800,
-            $height = 600,
-            $addstyle = '',
-            $return = false,
-            $ticks = null) {
+        $htmlid,
+        $graph,
+        $data,
+        $width = 800,
+        $height = 600,
+        $addstyle = '',
+        $return = false,
+        $ticks = null
+        ) {
 
         global $plotid;
         global $OUTPUT;

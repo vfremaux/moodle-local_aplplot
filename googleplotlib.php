@@ -189,7 +189,7 @@ class googlemaps {
      * @param string $city
      * @param arrayref $errors filled with google errors
      */
-    public static function get_geolocation($region, $address, $postalcode, $city, & $errors) {
+    public static function get_geolocation($region, $address, $postalcode, $city, &$errors) {
 
         $config = get_config('local_aplplot');
 
