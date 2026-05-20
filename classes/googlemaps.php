@@ -39,6 +39,7 @@ use stdClass;
 
 /**
  * GoogleMaps wrapper class
+ * @used-by block_dashboard
  */
 class googlemaps {
 

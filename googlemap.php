@@ -53,7 +53,7 @@ $PAGE->set_context($systemcontext);
 require_login();
 
 $template = new StdClass();
-$template->lang = get_current_language();
+$template->lang = current_language();
 $template->lat = $lat;
 $template->lng = $lng;
 $template->googlepikey = $config->googlemapsapikey;

@@ -36,6 +36,9 @@ use StdClass;
 
 /**
  * Renderer implementation.
+ * This plugin essentially renders small widgets from historically JQWidgets
+ * or other smaller plotting libraries and facilities. More complex frameworks
+ * such as JQPlot or GoogleMap will have their own plotting classes.
  */
 class renderer extends plugin_renderer_base {
 
@@ -253,7 +256,7 @@ class renderer extends plugin_renderer_base {
      * Provides a JQWidgets switch button
      * @param text $name
      * @param bool $value
-     * @param array $properties an array of propertues with ('width', 'height', 'onchecked', 'onunchecked')
+     * @param array $properties an array of properties with ('width', 'height', 'onchecked', 'onunchecked')
      */
     public function jqw_switchbutton($name, $value, $properties) {
 
