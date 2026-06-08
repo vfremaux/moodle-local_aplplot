@@ -253,12 +253,12 @@ class googlemaps {
         }
 
         if (!$geostruct = json_decode($rawresponse)) {
-            $errors[] = "Google bad response format";
+            $errors[] = get_string('googlebadformat', 'local_aplplot');
             return false;
         }
 
         if ($geostruct->status != 'OK') {
-            $errors[] = "Google denied service. Reason : ".$geostruct->status;
+            $errors[] = get_string('googledeniedservice', 'local_aplplot', $geostruct->status);
             return false;
         }
 

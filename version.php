@@ -25,10 +25,10 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version  = 2026041300;   // The (date) version of this plugin.
+$plugin->version  = 2026060801;   // The (date) version of this plugin.
 $plugin->requires = 2022112801;   // Requires this Moodle version.
 $plugin->component = 'local_aplplot';
-$plugin->release = '5.1.0 (Build 2026041300)';   // Release.
+$plugin->release = '5.1.0 (Build 2026060801)';   // Release.
 $plugin->maturity = MATURITY_RC;
 $plugin->supported = [500, 503];
 
