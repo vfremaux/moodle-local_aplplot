@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<libraries>
+  <library>
+    <location>chartjsplus</location>
+    <name>Chart JS modified</name>
+    <license>GNU</license>
+    <version></version>
+    <licenseversion>v3.0</licenseversion>
+  </library>
+  <library>
+    <location>timeline_api_2.3.0</location>
+    <name>Timeline</name>
+    <license>SIMILE</license>
+    <version></version>
+    <licenseversion>2006</licenseversion>
+  </library>
+  <library>
+    <location>jquery/jqplot</location>
+    <name>Jquery JQplot</name>
+    <license>MIT</license>
+    <version>1.0.9</version>
+    <licenseversion>2009-2013</licenseversion>
+  </library>
+  <library>
+    <location>jquery/jqwidgets</location>
+    <name>Jquery JQWidgets</name>
+    <license>JQWidget EULA</license>
+    <version>v6.1.0</version>
+    <licenseversion></licenseversion>
+  </library>
+</libraries>
