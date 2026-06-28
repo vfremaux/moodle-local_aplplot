@@ -29,6 +29,6 @@ $string['configgooglemapsapikey_desc'] = 'Google Maps n\'est plus un service gra
 $string['configjqplotshadows'] = 'Ombres des graphes JQPlot';
 $string['configjqplotshadows_desc'] = 'Si activé, ajouter un ombrage sur les générateurs jqplot.';
 $string['googlebadformat'] = 'Format de réponse erroné de Google';
-$string['googledeniedservice'] = "Google a refusé de fournir la donnée. Raison : {$a}";
+$string['googledeniedservice'] = 'Google a refusé de fournir la donnée. Raison : {$a}';
 $string['missinggooglekey'] = 'Vous n\'avez pas entré de clef d\'API Google. Voir la documentation https://developers.google.com/maps/documentation/javascript/get-api-key';
 $string['pluginname'] = 'Librairies de graphage pour les plugins APL';
